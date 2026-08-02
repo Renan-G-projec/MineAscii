@@ -2,13 +2,10 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
-
-// Holds all the game together
-struct Engine {
-    GLFWwindow* window;   
-};
+#include "vao.h"
 
 // Initializes the engine. If fails, returns -1. Runs all the game until finish.
 int8_t engine_init();

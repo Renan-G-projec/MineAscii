@@ -19,16 +19,16 @@ int8_t engine_init() {
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    unsigned int vao;
-    glGenVertexArrays(1, &vao);
+    GLuint vao = vao_create();
+    vao_bind(vao);
 
     unsigned int vbo;
     glGenBuffers(1, &vbo);
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
-    glEnableVertexAttribArray(0);
+    
+    vao_define(0, 3, GL_FLOAT, 3 * sizeof(float), NULL);
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
@@ -40,6 +40,7 @@ int8_t engine_init() {
     }
 
     shader_destroy(sh);
+    vao_destroy(vao);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

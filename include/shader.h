@@ -3,8 +3,11 @@
 #define SHADER_H
 
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <glad/glad.h>
 
-typedef unsigned int Shader;
+typedef GLuint Shader;
 
 // Returns the Shader struct and links it
 Shader shader_create(const char *vertexShaderPath, const char *fragmentShaderPath);

@@ -22,12 +22,10 @@ int8_t engine_init() {
     GLuint vao = vao_create();
     vao_bind(vao);
 
-    unsigned int vbo;
-    glGenBuffers(1, &vbo);
+    GLuint vbo = vbo_create();
+    vbo_bind(vbo);
+    vbo_set_data(vbo, sizeof(vertices), vertices);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
     vao_define(0, 3, GL_FLOAT, 3 * sizeof(float), NULL);
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");

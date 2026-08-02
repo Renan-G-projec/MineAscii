@@ -1,3 +1,4 @@
 # Ad Maiorem Dei Gloriam!
 
-*.out
+build/*
+!build/.gitkeep

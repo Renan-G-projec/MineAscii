@@ -20,12 +20,15 @@ FetchContent_MakeAvailable(glfw)
 # Actual compiling
 add_executable(MineAscii)
 
+find_package(OpenGL REQUIRED)
+
 target_sources(MineAscii PRIVATE
     src/main.c src/asciibuffer.c
+    external/glad/src/glad.c
 )
 
 target_include_directories(MineAscii PRIVATE
-    "include"
+    "include" "external/glad/include"
 )
 
-target_link_libraries(MineAscii PRIVATE glfw)
+target_link_libraries(MineAscii PRIVATE glfw OpenGL::GL)

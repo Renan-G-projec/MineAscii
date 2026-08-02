@@ -1,19 +1,19 @@
 // Ad Maiorem Dei Gloriam!
 #include <stdio.h>
-#include "framebuffer.h"
+#include "asciibuffer.h"
 
 int main() {
-    struct framebuffer fb;
-    framebuffer_init(&fb, 10, 10);
+    struct asciibuffer ascbuff;
+    asciibuffer_init(&ascbuff, 10, 10);
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            framebuffer_setbgcolor(&fb, 0, 0, x == y ? 255 : 0);
-            framebuffer_writechar(&fb, ' ');
+            asciibuffer_setbgcolor(&ascbuff, 0, 0, x == y ? 255 : 0);
+            asciibuffer_writechar(&ascbuff, ' ');
         }
-        framebuffer_writechar(&fb, '\n');
+        asciibuffer_writechar(&ascbuff, '\n');
     }
 
-    framebuffer_print(&fb);
-    framebuffer_destroy(&fb);
+    asciibuffer_print(&ascbuff);
+    asciibuffer_destroy(&ascbuff);
     return 0;
 }

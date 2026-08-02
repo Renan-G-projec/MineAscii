@@ -6,7 +6,7 @@ project(MineAscii)
 add_executable(MineAscii)
 
 target_sources(MineAscii PRIVATE
-    src/main.c src/framebuffer.c
+    src/main.c src/asciibuffer.c
 )
 
 target_include_directories(MineAscii PRIVATE

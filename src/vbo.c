@@ -8,8 +8,8 @@ VBO vbo_create(void) {
     return v;
 }
 
-void vbo_set_data(VBO v, GLuint dataSize, GLfloat *d) {
-    glBufferData(GL_ARRAY_BUFFER, dataSize, d, GL_STATIC_DRAW);
+void vbo_set_data(VBO v, GLuint size, GLfloat *d) {
+    glBufferData(GL_ARRAY_BUFFER, size, d, GL_STATIC_DRAW);
 }
 
 void vbo_bind(VBO v) {

@@ -10,7 +10,7 @@ typedef GLuint VBO;
 VBO vbo_create(void);
 
 // Copies the data to VBO
-void vbo_set_data(VBO, GLuint dataSize, GLfloat *data);
+void vbo_set_data(VBO, GLuint size, GLfloat *data);
 
 void vbo_bind(VBO);
 void vbo_unbind(void);

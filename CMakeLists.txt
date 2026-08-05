@@ -15,7 +15,16 @@ FetchContent_Declare(
     GIT_TAG master
 )
 
-FetchContent_MakeAvailable(glfw)
+set(CGLM_SHARED OFF)
+set(CGLM_STATIC ON)
+
+FetchContent_Declare(
+    cglm
+    GIT_REPOSITORY https://github.com/recp/cglm.git
+    GIT_TAG master
+)
+
+FetchContent_MakeAvailable(glfw cglm)
 
 # Actual compiling
 add_executable(MineAscii)
@@ -31,4 +40,4 @@ target_include_directories(MineAscii PRIVATE
     "include" "external/glad/include"
 )
 
-target_link_libraries(MineAscii PRIVATE glfw OpenGL::GL)
+target_link_libraries(MineAscii PRIVATE glfw cglm OpenGL::GL)

@@ -1,7 +1,7 @@
 // Ad Maiorem Dei Gloriam!
 #include "vbo.h"
 
-VBO vbo_create() {
+VBO vbo_create(void) {
     VBO v;
     glGenBuffers(1, &v);
     
@@ -16,7 +16,7 @@ void vbo_bind(VBO v) {
     glBindBuffer(GL_ARRAY_BUFFER, v);
 }
 
-void vbo_unbind() {
+void vbo_unbind(void) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

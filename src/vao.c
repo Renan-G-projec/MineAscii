@@ -1,7 +1,7 @@
 // Ad Maiorem Dei Gloriam!
 #include "vao.h"
 
-VAO vao_create() {
+VAO vao_create(void) {
     VAO vao;
     glGenVertexArrays(1, &vao);
 
@@ -12,7 +12,7 @@ void vao_bind(VAO v) {
     glBindVertexArray(v);
 }
 
-void vao_unbind() {
+void vao_unbind(void) {
     glBindVertexArray(0);
 }
 

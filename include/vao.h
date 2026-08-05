@@ -7,7 +7,7 @@
 typedef GLuint VAO;
 
 // Creates an Vertex Array Object
-VAO vao_create();
+VAO vao_create(void);
 
 // Defines the attribute of an vertex
 void vao_define(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* offset);
@@ -16,7 +16,7 @@ void vao_define(GLuint index, GLint size, GLenum type, GLsizei stride, const GLv
 void vao_bind(VAO);
 
 // Unbinds the Vertex Array Object
-void vao_unbind();
+void vao_unbind(void);
 
 // Deletes the Vertex Array Object
 void vao_destroy(VAO);

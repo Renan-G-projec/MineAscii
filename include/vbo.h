@@ -7,13 +7,13 @@
 typedef GLuint VBO;
 
 // Initializes the VBO buffer
-VBO vbo_create();
+VBO vbo_create(void);
 
 // Copies the data to VBO
 void vbo_set_data(VBO, GLuint dataSize, GLfloat *data);
 
 void vbo_bind(VBO);
-void vbo_unbind();
+void vbo_unbind(void);
 
 void vbo_destroy(VBO);
 

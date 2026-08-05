@@ -9,6 +9,6 @@
 #include "vbo.h"
 
 // Initializes the engine. If fails, returns -1. Runs all the game until finish.
-int8_t engine_init();
+int8_t engine_init(void);
 
 #endif

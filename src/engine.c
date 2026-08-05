@@ -8,7 +8,7 @@ float vertices[] = {
      0.0f,  0.5f, 0.0f
 }; 
 
-int8_t engine_init() {
+int8_t engine_init(void) {
     if (!glfwInit()) {
         printf("Error initializing GLFW.\nExiting...\n");
         return 0;

@@ -47,11 +47,9 @@ int8_t engine_init(void) {
         GLint uRot = glGetUniformLocation(sh, "rot");
         mat4 rotMatrix;
 
-        glm_mat4_identity(rotMatrix);
-        rotMatrix[0][0] = cos(rot);
-        rotMatrix[0][1] = -1 * sin(rot);
-        rotMatrix[1][0] = sin(rot);
-        rotMatrix[1][1] = cos(rot);
+        lm_mat4_identity(rotMatrix);
+        vec3 axis = {0, 0, 1};
+        glm_rotate(rotMatrix, glm_rad(rot), axis);
         
         glUniformMatrix4fv(uRot, 1, GL_FALSE, rotMatrix[0]);    
 

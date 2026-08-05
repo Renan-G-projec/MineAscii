@@ -13,6 +13,8 @@ unsigned int indices[] = {  // note that we start from 0!
     1, 2, 3    // second triangle
 };
 
+float rot = 0.f;
+
 int8_t engine_init(void) {
     if (!glfwInit()) {
         printf("Error initializing GLFW.\nExiting...\n");
@@ -41,9 +43,24 @@ int8_t engine_init(void) {
     shader_bind(sh);
     
     while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT);
+        GLint uRot = glGetUniformLocation(sh, "rot");
+        mat4 rotMatrix;
+
+        glm_mat4_identity(rotMatrix);
+        rotMatrix[0][0] = cos(rot);
+        rotMatrix[0][1] = -1 * sin(rot);
+        rotMatrix[1][0] = sin(rot);
+        rotMatrix[1][1] = cos(rot);
+        
+        glUniformMatrix4fv(uRot, 1, GL_FALSE, rotMatrix[0]);    
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        rot += 0.1;
+        if (rot > 359) rot = 0;
     }
 
     shader_destroy(sh);

@@ -26,18 +26,7 @@ int8_t engine_init(void) {
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    GLuint vao = vao_create();
-    vao_bind(vao);
-
-    GLuint vbo = vbo_create();
-    vbo_bind(vbo);
-    vbo_set_data(vbo, sizeof(vertices), vertices);
-
-    GLuint ebo = ebo_create();
-    ebo_bind(ebo);
-    ebo_send_data(ebo, sizeof(indices), indices);
-
-    vao_define(0, 3, GL_FLOAT, 3 * sizeof(float), NULL);
+    Mesh square = mesh_init(vertices, indices, sizeof(vertices) / sizeof(vertices[0]), sizeof(indices) / sizeof(indices[0]));
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
@@ -53,7 +42,7 @@ int8_t engine_init(void) {
         
         glUniformMatrix4fv(uRot, 1, GL_FALSE, rotMatrix[0]);    
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+        mesh_draw(&square);
         glfwSwapBuffers(window);
         glfwPollEvents();
 
@@ -62,7 +51,7 @@ int8_t engine_init(void) {
     }
 
     shader_destroy(sh);
-    vao_destroy(vao);
+    mesh_destroy(&square);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

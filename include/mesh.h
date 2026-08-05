@@ -3,6 +3,7 @@
 #define MESH_H
 
 #include <glad/glad.h>
+#include <stdlib.h>
 #include "shader.h"
 #include "vbo.h"
 #include "vao.h"
@@ -12,8 +13,8 @@ typedef struct {
     GLfloat *vertices;
     GLuint *indices;
 
-    GLint numVertices;
-    GLint numIndices;
+    GLsizei numVertices;
+    GLsizei numIndices;
 
     VBO vbo;
     VAO vao;
@@ -21,12 +22,12 @@ typedef struct {
 } Mesh;
 
 // Creates a mesh while tracking binds and unbinds
-Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLint numVertices, GLint numIndices);
+Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei numIndices);
 
 // Helper function that binds the VAO and draws the vertices
-void mesh_draw(Mesh);
+void mesh_draw(Mesh *);
 
-// Destroys the mesh. WARNING: frees the vertices and indices memory!
-void mesh_destroy(Mesh);
+// Destroys the mesh. WARNING: Does not frees any memory into the Vertices or indices pointer!
+void mesh_destroy(Mesh *);
 
 #endif

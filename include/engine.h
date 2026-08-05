@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "vao.h"
 #include "vbo.h"
+#include "ebo.h"
 
 // Initializes the engine. If fails, returns -1. Runs all the game until finish.
 int8_t engine_init(void);

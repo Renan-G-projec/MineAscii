@@ -23,7 +23,7 @@ add_executable(MineAscii)
 find_package(OpenGL REQUIRED)
 
 target_sources(MineAscii PRIVATE
-    src/main.c src/asciibuffer.c src/shader.c src/engine.c src/vao.c src/vbo.c
+    src/main.c src/asciibuffer.c src/shader.c src/engine.c src/vao.c src/vbo.c src/ebo.c
     external/glad/src/glad.c
 )
 

@@ -10,7 +10,7 @@ typedef GLuint EBO;
 EBO ebo_create(void);
 
 // Copies the EBO vertices
-void ebo_send_data(EBO, GLsizei size, GLfloat *data);
+void ebo_send_data(EBO, GLsizei size, GLint *data);
 
 // Binds the EBO
 void ebo_bind(EBO);

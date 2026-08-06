@@ -34,7 +34,7 @@ Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei 
 
 void mesh_draw(Mesh *mesh) {
     vao_bind(mesh->vao);
-    glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, mesh->indices);
+    glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, NULL);
 }
 
 void mesh_destroy(Mesh *mesh) {

@@ -26,25 +26,17 @@ int8_t engine_init(void) {
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    Mesh square = mesh_init(vertices, indices, sizeof(vertices) / sizeof(vertices[0]), sizeof(indices) / sizeof(indices[0]));
+    Mesh square = mesh_init(vertices, indices, sizeof(vertices), sizeof(indices));
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
     
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
-        GLint uRot = glGetUniformLocation(sh, "rot");
-        mat4 rotMatrix;
-
-        lm_mat4_identity(rotMatrix);
-        vec3 axis = {0, 0, 1};
-        glm_rotate(rotMatrix, glm_rad(rot), axis);
-        
-        glUniformMatrix4fv(uRot, 1, GL_FALSE, rotMatrix[0]);    
 
         mesh_draw(&square);
         glfwSwapBuffers(window);
-        glfwPollEvents();
 
         rot += 0.1;
         if (rot > 359) rot = 0;

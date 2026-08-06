@@ -26,6 +26,9 @@ int8_t engine_init(void) {
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
+    KeyboardCtx kb = keyboardctx_create();
+    keyboardctx_bindwindowctx(&kb, window);
+
     Mesh square = mesh_init(vertices, indices, sizeof(vertices), sizeof(indices));
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
@@ -37,6 +40,8 @@ int8_t engine_init(void) {
 
         mesh_draw(&square);
         glfwSwapBuffers(window);
+
+        if (keyboardctx_isKeyPressed(&kb, 'A')) printf("KEY a is pressed!\n");
 
         rot += 0.1;
         if (rot > 359) rot = 0;

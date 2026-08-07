@@ -13,7 +13,20 @@ unsigned int indices[] = {  // note that we start from 0!
     1, 2, 3    // second triangle
 };
 
-float rot = 0.f;
+void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
+    if (keyboardctx_isKeyPressed(kb, 'W')) {
+        camera->position[2]++;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'S')) {
+        camera->position[2]--;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'A')) {
+        camera->position[0]++;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'D')) {
+        camera->position[0]--;
+    }
+}
 
 int8_t engine_init(void) {
     if (!glfwInit()) {
@@ -40,15 +53,11 @@ int8_t engine_init(void) {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
 
+        updateCameraInput(&cam, &kb);
         camera_send_matrix(&cam, sh);
 
         mesh_draw(&square);
         glfwSwapBuffers(window);
-
-        if (keyboardctx_isKeyPressed(&kb, 'A')) printf("KEY a is pressed!\n");
-
-        rot += 0.1;
-        if (rot > 359) rot = 0;
     }
 
     shader_destroy(sh);

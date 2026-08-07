@@ -18,4 +18,7 @@ Camera camera_create(void);
 // Locates the uniform "camMatrix" and sends the camera matrix
 void camera_send_matrix(Camera *, Shader sh);
 
+// Moves the camera to the position
+inline void camera_set_pos(Camera *, float x, float y, float z);
+
 #endif

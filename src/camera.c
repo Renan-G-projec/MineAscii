@@ -35,3 +35,9 @@ void camera_send_matrix(Camera *cam, Shader sh) {
     GLint uniformLocation = glGetUniformLocation(sh, "camMatrix");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camMatrix[0]);
 }
+
+inline void camera_set_pos(Camera *camera, float x, float y, float z) {
+    camera->position[0] = x;
+    camera->position[1] = y;
+    camera->position[2] = x;
+}

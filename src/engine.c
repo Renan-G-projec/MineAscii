@@ -3,10 +3,10 @@
 #include "engine.h"
 
 float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+     0.5f,  0.5f, 1.0f,  // top right
+     0.5f, -0.5f, 1.0f,  // bottom right
+    -0.5f, -0.5f, 1.0f,  // bottom left
+    -0.5f,  0.5f, 1.0f   // top left 
 };
 unsigned int indices[] = {  // note that we start from 0!
     0, 1, 3,   // first triangle
@@ -33,10 +33,14 @@ int8_t engine_init(void) {
 
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
+
+    Camera cam = camera_create();
     
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
+
+        camera_send_matrix(&cam, sh);
 
         mesh_draw(&square);
         glfwSwapBuffers(window);

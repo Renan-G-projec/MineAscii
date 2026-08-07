@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <math.h>
+#include "camera.h"
 #include "input.h"
 #include "shader.h"
 #include "mesh.h"

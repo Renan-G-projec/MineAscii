@@ -2,19 +2,20 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <glad/glad.h>
 #include <cglm/cglm.h>
+
+#include "shader.h"
 
 typedef struct {
     vec3 position;
     vec3 orientation;
 } Camera;
 
-extern Camera gCamera;
-
 // Creates an camera and configures it
-Camera camera_create(vec3 position);
+Camera camera_create(void);
 
-// Locates the uniform "camMatrix" and sends the camera matrixf
-void camera_send_matrix(Camera *);
+// Locates the uniform "camMatrix" and sends the camera matrix
+void camera_send_matrix(Camera *, Shader sh);
 
 #endif

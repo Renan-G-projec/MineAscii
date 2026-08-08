@@ -15,8 +15,14 @@ float vertices[] = {
 unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2, // front face
     1, 3, 2, // front face
+    0, 1, 4, // Left face
+    4, 5, 1, // Left face 
     1, 5, 7, // top face
     7, 3, 1, // top face
+    0, 4, 2, // bottom face
+    4, 6, 2, // Bottom face 
+    2, 3, 6, // Right face
+    6, 7, 3, // Right face
     4, 5, 6, // back face
     5, 7, 6 // back face
 };

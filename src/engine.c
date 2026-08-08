@@ -3,14 +3,14 @@
 #include "engine.h"
 
 float vertices[] = {
-    -1.0f, -1.0f, -1.0f, // front 
-    -1.0f, 1.0f, -1.0f, // front
-    1.0f, -1.0f, -1.0f, // front
-    1.0f, 1.0f, -1.0f, // front
-    -1.0f, -1.0f, 1.0f, // back
-    -1.0f, 1.0f, 1.0f, // back
-    1.0f, -1.0f, 1.0f, // back
-    1.0f, 1.0f, 1.0f, // back
+    -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, // front down-left
+    -1.0f, 1.0f, -1.0f, 0.0f, 1.0f, // front up-left
+    1.0f, -1.0f, -1.0f, 1.0f, 0.0f, // front down-right
+    1.0f, 1.0f, -1.0f, 1.0f, 1.0f, // front up-right
+    -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, // back down-left
+    -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // back up-left
+    1.0f, -1.0f, 1.0f, 1.0f, 0.0f, // back down-right
+    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // back up-right
 };
 unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2, // front face
@@ -91,14 +91,40 @@ int8_t engine_init(void) {
     shader_bind(sh);
 
     Camera cam = camera_create(WINDOW_MODE_WIDTH / (float)WINDOW_MODE_HEIGHT);
+
+
+    int imgWidth, imgHeight, numColorChannels;
+    stbi_set_flip_vertically_on_load(1);
+    unsigned char *bytes = stbi_load("assets/textures/grass_block_side.png", &imgWidth, &imgHeight, &numColorChannels, 0);
     
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
+    stbi_image_free(bytes);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    GLint uTex0 = glGetUniformLocation(sh, "tex0");
+    glUniform1i(uTex0, 0);
+
+    glEnable(GL_DEPTH_TEST);
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         updateCameraInput(&cam, &kb);
         camera_send_matrix(&cam, sh);
 
+        glBindTexture(GL_TEXTURE_2D, texture);
         mesh_draw(&square);
         glfwSwapBuffers(window);
     }

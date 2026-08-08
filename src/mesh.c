@@ -21,7 +21,8 @@ Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei 
     ebo_bind(mesh.ebo);
     ebo_send_data(mesh.ebo, numIndices, indices);
 
-    vao_define(0, 3, GL_FLOAT, 3 * sizeof(GLfloat), NULL);
+    vao_define(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), (void *)0); // Coords
+    vao_define(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GL_FLOAT))); // UV
 
     // Unbinds for security
     // Due to only unbinding on constructor shall not have any reasonable impact on performance

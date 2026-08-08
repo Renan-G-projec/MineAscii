@@ -3,29 +3,56 @@
 #include "engine.h"
 
 float vertices[] = {
-     0.5f,  0.5f, 1.0f,  // top right
-     0.5f, -0.5f, 1.0f,  // bottom right
-    -0.5f, -0.5f, 1.0f,  // bottom left
-    -0.5f,  0.5f, 1.0f   // top left 
+    -1.0f, -1.0f, -1.0f, // front 
+    -1.0f, 1.0f, -1.0f, // front
+    1.0f, -1.0f, -1.0f, // front
+    1.0f, 1.0f, -1.0f, // front
+    -1.0f, -1.0f, 1.0f, // back
+    -1.0f, 1.0f, 1.0f, // back
+    1.0f, -1.0f, 1.0f, // back
+    1.0f, 1.0f, 1.0f, // back
 };
 unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
+    0, 1, 2, // front face
+    1, 3, 2, // front face
+    1, 5, 7, // top face
+    7, 3, 1, // top face
+    4, 5, 6, // back face
+    5, 7, 6 // back face
 };
 
 void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
     if (keyboardctx_isKeyPressed(kb, 'W')) {
-        camera->position[2]++;
+        camera->position[2]+= 0.1;
     }
     if (keyboardctx_isKeyPressed(kb, 'S')) {
-        camera->position[2]--;
+        camera->position[2]-= 0.1;
     }
     if (keyboardctx_isKeyPressed(kb, 'A')) {
-        camera->position[0]++;
+        camera->position[0]+= 0.1;
     }
     if (keyboardctx_isKeyPressed(kb, 'D')) {
-        camera->position[0]--;
+        camera->position[0]-= 0.1;
     }
+
+    float rotX = 0, rotY = 0;
+    if (keyboardctx_isKeyPressed(kb, 'I')) {
+        rotY++;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'K')) {
+        rotY--;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'L')) {
+        rotX++;
+    }
+    if (keyboardctx_isKeyPressed(kb, 'J')) {
+        rotX--;
+    }
+
+    vec3 axisToRotateY;
+    glm_cross(camera->orientation, (vec3){0, 1, 0}, axisToRotateY);
+    glm_vec3_rotate(camera->orientation, glm_rad(rotY), axisToRotateY);
+    glm_vec3_rotate(camera->orientation, glm_rad(-rotX), (vec3){0, 1, 0});
 }
 
 int8_t engine_init(void) {
@@ -34,7 +61,7 @@ int8_t engine_init(void) {
         return 0;
     };
 
-    GLFWwindow* window = glfwCreateWindow(100, 100, "Hello, window! - AMDG", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_MODE_WIDTH, WINDOW_MODE_HEIGHT, "Hello, window! - AMDG", NULL, NULL);
 
     glfwMakeContextCurrent(window);
     gladLoadGL();
@@ -47,7 +74,7 @@ int8_t engine_init(void) {
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
 
-    Camera cam = camera_create();
+    Camera cam = camera_create(WINDOW_MODE_WIDTH / (float)WINDOW_MODE_HEIGHT);
     
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

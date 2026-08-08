@@ -1,7 +1,7 @@
 // Ad Maiorem Dei Gloriam!
 #include "camera.h"
 
-Camera camera_create(void) {
+Camera camera_create(float window_ratio) {
     Camera c;
     c.position[0] = 0.0f;
     c.position[1] = 0.0f;
@@ -10,6 +10,8 @@ Camera camera_create(void) {
     c.orientation[0] = 0.0f;
     c.orientation[1] = 0.0f;
     c.orientation[2] = 1.0f;
+
+    c.window_ratio = window_ratio;
     
     return c;
 }
@@ -28,7 +30,7 @@ void camera_send_matrix(Camera *cam, Shader sh) {
     glm_lookat(cam->position, lookingPos, up, view);
 
     // Sets the projection matrix
-    glm_perspective(glm_rad(60.0f), 1.0f, 0.001f, 100.0f, projection);
+    glm_perspective(glm_rad(60.0f), cam->window_ratio, 0.001f, 100.0f, projection);
 
     glm_mat4_mul(projection, view, camMatrix);
 

@@ -11,6 +11,9 @@
 #include "shader.h"
 #include "mesh.h"
 
+#define WINDOW_MODE_WIDTH 1280
+#define WINDOW_MODE_HEIGHT 720
+
 // Initializes the engine. If fails, returns -1. Runs all the game until finish.
 int8_t engine_init(void);
 

@@ -22,17 +22,27 @@ unsigned int indices[] = {  // note that we start from 0!
 };
 
 void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
+    
     if (keyboardctx_isKeyPressed(kb, 'W')) {
-        camera->position[2]+= 0.1;
+        glm_vec3_add(camera->orientation, camera->position, camera->position);
     }
     if (keyboardctx_isKeyPressed(kb, 'S')) {
-        camera->position[2]-= 0.1;
+        glm_vec3_negate(camera->orientation);
+        glm_vec3_add(camera->orientation, camera->position, camera->position);
+        glm_vec3_negate(camera->orientation);
     }
     if (keyboardctx_isKeyPressed(kb, 'A')) {
-        camera->position[0]+= 0.1;
+        vec3 horizontalAxis;
+        glm_cross(camera->orientation, (vec3){0, 1, 0}, horizontalAxis);
+
+        glm_vec3_negate(horizontalAxis);
+        glm_vec3_add(horizontalAxis, camera->position, camera->position);
     }
     if (keyboardctx_isKeyPressed(kb, 'D')) {
-        camera->position[0]-= 0.1;
+        vec3 horizontalAxis;
+        glm_cross(camera->orientation, (vec3){0, 1, 0}, horizontalAxis);
+        
+        glm_vec3_add(horizontalAxis, camera->position, camera->position);
     }
 
     float rotX = 0, rotY = 0;

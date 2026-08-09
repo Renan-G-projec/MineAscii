@@ -39,6 +39,7 @@ float vertices[] = {
     1.0f, -1.0f, 1.0f, 0.03125f * 9.0f, 0.0625f * 11.0f, // Down down right
     1.0f, -1.0f, -1.0f, 0.03125f * 9.0f, 0.0625f * 12.0f, // Down up right
 };
+
 unsigned int indices[] = {  // note that we start from 0!
     // FRONT
     0, 1, 2,
@@ -91,16 +92,16 @@ void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
 
     float rotX = 0, rotY = 0;
     if (keyboardctx_isKeyPressed(kb, 'I')) {
-        rotY++;
+        rotY += 10;
     }
     if (keyboardctx_isKeyPressed(kb, 'K')) {
-        rotY--;
+        rotY -= 10;
     }
     if (keyboardctx_isKeyPressed(kb, 'L')) {
-        rotX++;
+        rotX += 10;
     }
     if (keyboardctx_isKeyPressed(kb, 'J')) {
-        rotX--;
+        rotX -= 10;
     }
 
     vec3 axisToRotateY;
@@ -130,26 +131,9 @@ int8_t engine_init(void) {
 
     Camera cam = camera_create(WINDOW_MODE_WIDTH / (float)WINDOW_MODE_HEIGHT);
 
-
-    int imgWidth, imgHeight, numColorChannels;
-    stbi_set_flip_vertically_on_load(1);
-    unsigned char *bytes = stbi_load("assets/textures/atlas.png", &imgWidth, &imgHeight, &numColorChannels, 0);
-    
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
-    stbi_image_free(bytes);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glActiveTexture(0);
+    Texture t = texture_create();
+    texture_load_png(t, "assets/textures/atlas.png");
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");
     glUniform1i(uTex0, 0);
@@ -157,12 +141,13 @@ int8_t engine_init(void) {
     glEnable(GL_DEPTH_TEST);
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        glClearColor(.1f, .2f, .4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         updateCameraInput(&cam, &kb);
         camera_send_matrix(&cam, sh);
 
-        glBindTexture(GL_TEXTURE_2D, texture);
+        texture_bind(t);
         mesh_draw(&square);
         glfwSwapBuffers(window);
     }

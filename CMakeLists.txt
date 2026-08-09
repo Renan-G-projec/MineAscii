@@ -33,6 +33,7 @@ find_package(OpenGL REQUIRED)
 
 target_sources(MineAscii PRIVATE
     src/main.c src/asciibuffer.c src/shader.c src/engine.c src/vao.c src/vbo.c src/ebo.c src/mesh.c src/input.c src/camera.c
+    src/texture.c
     external/glad/src/glad.c external/stb/src/stb_image.c
 )
 

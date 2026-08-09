@@ -12,7 +12,7 @@ typedef GLuint Texture;
 Texture texture_create(void);
 
 // Loads from a file with stb image
-uint8_t texture_load_png(Texture);
+void texture_load_png(Texture, const char *filename);
 
 // Binds the texture
 void texture_bind(Texture);

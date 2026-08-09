@@ -3,28 +3,66 @@
 #include "engine.h"
 
 float vertices[] = {
-    -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, // front down-left
-    -1.0f, 1.0f, -1.0f, 0.0f, 1.0f, // front up-left
-    1.0f, -1.0f, -1.0f, 1.0f, 0.0f, // front down-right
-    1.0f, 1.0f, -1.0f, 1.0f, 1.0f, // front up-right
-    -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, // back down-left
-    -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // back up-left
-    1.0f, -1.0f, 1.0f, 1.0f, 0.0f, // back down-right
-    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // back up-right
+    // FRONT
+    -1.0f, -1.0f, -1.0f, 0.0f, 0.0625f * 5.0f, // Front down left
+    -1.0f, 1.0f, -1.0f, 0.0f, 0.0625f * 6.0f, // Front up left
+    1.0f, -1.0f, -1.0f, 0.03125f, 0.0625f * 5.0f, // Front down right
+    1.0f, 1.0f, -1.0f, 0.03125f, 0.0625f * 6.0f, // Front up right
+
+    // BACK
+    -1.0f, -1.0f, 1.0f, 0.0f, 0.0625f * 5.0f, // Back down left
+    -1.0f, 1.0f, 1.0f, 0.0f, 0.0625f * 6.0f, // Back up left
+    1.0f, -1.0f, 1.0f, 0.03125f, 0.0625f * 5.0f, // Back down right
+    1.0f, 1.0f, 1.0f, 0.03125f, 0.0625f * 6.0f, // Back up right
+    
+    // LEFT
+    -1.0f, -1.0f, 1.0f, 0.0f, 0.0625f * 5.0f, // Left down left
+    -1.0f, 1.0f, 1.0f, 0.0f, 0.0625f * 6.0f, // Left up left
+    -1.0f, -1.0f, -1.0f, 0.03125f, 0.0625f * 5.0f, // Left down right
+    -1.0f, 1.0f, -1.0f, 0.03125f, 0.0625f * 6.0f, // Left up right
+
+    // RIGHT
+    1.0f, -1.0f, -1.0f, 0.0f, 0.0625f * 5.0f, // Right down left
+    1.0f, 1.0f, -1.0f, 0.0f, 0.0625f * 6.0f, // Right up left
+    1.0f, -1.0f, 1.0f, 0.03125f, 0.0625f * 5.0f, // Right down right
+    1.0f, 1.0f, 1.0f, 0.03125f, 0.0625f * 6.0f, // Right up right
+
+    // TOP
+    -1.0f, 1.0f, -1.0f, 0.03125f * 3.0f, 0.0625f * 5.0f, // Top down left
+    -1.0f, 1.0f, 1.0f, 0.03125f * 3.0f, 0.0625f * 6.0f, // Top up left
+    1.0f, 1.0f, -1.0f, 0.03125f * 4.0f, 0.0625f * 5.0f, // Top down right
+    1.0f, 1.0f, 1.0f, 0.03125f * 4.0f, 0.0625f * 6.0f, // Top up right
+
+    // DOWN
+    -1.0f, -1.0f, 1.0f, 0.03125f * 8.0f, 0.0625f * 11.0f, // Down down left
+    -1.0f, -1.0f, -1.0f, 0.03125f * 8.0f, 0.0625f * 12.0f, // Down up left
+    1.0f, -1.0f, 1.0f, 0.03125f * 9.0f, 0.0625f * 11.0f, // Down down right
+    1.0f, -1.0f, -1.0f, 0.03125f * 9.0f, 0.0625f * 12.0f, // Down up right
 };
 unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 2, // front face
-    1, 3, 2, // front face
-    0, 1, 4, // Left face
-    4, 5, 1, // Left face 
-    1, 5, 7, // top face
-    7, 3, 1, // top face
-    0, 4, 2, // bottom face
-    4, 6, 2, // Bottom face 
-    2, 3, 6, // Right face
-    6, 7, 3, // Right face
-    4, 5, 6, // back face
-    5, 7, 6 // back face
+    // FRONT
+    0, 1, 2,
+    1, 3, 2,
+
+    // BACK
+    4, 5, 6,
+    5, 7, 6,
+
+    // LEFT
+    8, 9, 10,
+    9, 11, 10,
+
+    // RIGHT
+    12, 13, 14,
+    13, 15, 14,
+
+    // TOP
+    16, 17, 18,
+    17, 19, 18,
+
+    // DOWN
+    20, 21, 22,
+    21, 23, 22
 };
 
 void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
@@ -95,7 +133,7 @@ int8_t engine_init(void) {
 
     int imgWidth, imgHeight, numColorChannels;
     stbi_set_flip_vertically_on_load(1);
-    unsigned char *bytes = stbi_load("assets/textures/grass_block_side.png", &imgWidth, &imgHeight, &numColorChannels, 0);
+    unsigned char *bytes = stbi_load("assets/textures/atlas.png", &imgWidth, &imgHeight, &numColorChannels, 0);
     
     GLuint texture;
     glGenTextures(1, &texture);

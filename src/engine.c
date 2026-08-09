@@ -2,70 +2,6 @@
 
 #include "engine.h"
 
-float vertices[] = {
-    // FRONT
-    -1.0f, -1.0f, -1.0f, 0.0f, 0.0625f * 5.0f, // Front down left
-    -1.0f, 1.0f, -1.0f, 0.0f, 0.0625f * 6.0f, // Front up left
-    1.0f, -1.0f, -1.0f, 0.03125f, 0.0625f * 5.0f, // Front down right
-    1.0f, 1.0f, -1.0f, 0.03125f, 0.0625f * 6.0f, // Front up right
-
-    // BACK
-    -1.0f, -1.0f, 1.0f, 0.0f, 0.0625f * 5.0f, // Back down left
-    -1.0f, 1.0f, 1.0f, 0.0f, 0.0625f * 6.0f, // Back up left
-    1.0f, -1.0f, 1.0f, 0.03125f, 0.0625f * 5.0f, // Back down right
-    1.0f, 1.0f, 1.0f, 0.03125f, 0.0625f * 6.0f, // Back up right
-    
-    // LEFT
-    -1.0f, -1.0f, 1.0f, 0.0f, 0.0625f * 5.0f, // Left down left
-    -1.0f, 1.0f, 1.0f, 0.0f, 0.0625f * 6.0f, // Left up left
-    -1.0f, -1.0f, -1.0f, 0.03125f, 0.0625f * 5.0f, // Left down right
-    -1.0f, 1.0f, -1.0f, 0.03125f, 0.0625f * 6.0f, // Left up right
-
-    // RIGHT
-    1.0f, -1.0f, -1.0f, 0.0f, 0.0625f * 5.0f, // Right down left
-    1.0f, 1.0f, -1.0f, 0.0f, 0.0625f * 6.0f, // Right up left
-    1.0f, -1.0f, 1.0f, 0.03125f, 0.0625f * 5.0f, // Right down right
-    1.0f, 1.0f, 1.0f, 0.03125f, 0.0625f * 6.0f, // Right up right
-
-    // TOP
-    -1.0f, 1.0f, -1.0f, 0.03125f * 3.0f, 0.0625f * 5.0f, // Top down left
-    -1.0f, 1.0f, 1.0f, 0.03125f * 3.0f, 0.0625f * 6.0f, // Top up left
-    1.0f, 1.0f, -1.0f, 0.03125f * 4.0f, 0.0625f * 5.0f, // Top down right
-    1.0f, 1.0f, 1.0f, 0.03125f * 4.0f, 0.0625f * 6.0f, // Top up right
-
-    // DOWN
-    -1.0f, -1.0f, 1.0f, 0.03125f * 8.0f, 0.0625f * 11.0f, // Down down left
-    -1.0f, -1.0f, -1.0f, 0.03125f * 8.0f, 0.0625f * 12.0f, // Down up left
-    1.0f, -1.0f, 1.0f, 0.03125f * 9.0f, 0.0625f * 11.0f, // Down down right
-    1.0f, -1.0f, -1.0f, 0.03125f * 9.0f, 0.0625f * 12.0f, // Down up right
-};
-
-unsigned int indices[] = {  // note that we start from 0!
-    // FRONT
-    0, 1, 2,
-    1, 3, 2,
-
-    // BACK
-    4, 5, 6,
-    5, 7, 6,
-
-    // LEFT
-    8, 9, 10,
-    9, 11, 10,
-
-    // RIGHT
-    12, 13, 14,
-    13, 15, 14,
-
-    // TOP
-    16, 17, 18,
-    17, 19, 18,
-
-    // DOWN
-    20, 21, 22,
-    21, 23, 22
-};
-
 void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
     
     if (keyboardctx_isKeyPressed(kb, 'W')) {
@@ -124,8 +60,6 @@ int8_t engine_init(void) {
     KeyboardCtx kb = keyboardctx_create();
     keyboardctx_bindwindowctx(&kb, window);
 
-    Mesh square = mesh_init(vertices, indices, sizeof(vertices), sizeof(indices));
-
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
 
@@ -134,6 +68,20 @@ int8_t engine_init(void) {
     glActiveTexture(0);
     Texture t = texture_create();
     texture_load_png(t, "assets/textures/atlas.png");
+
+    Chunk chunk = chunk_create();
+    chunk_fill_block(&chunk, BLOCK_AIR);
+
+    // X ROW - DOTTED
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){2, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){4, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){6, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){8, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){10, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){12, 0, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){14, 0, 0});
+    chunk_build_mesh(&chunk);
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");
     glUniform1i(uTex0, 0);
@@ -148,12 +96,12 @@ int8_t engine_init(void) {
         camera_send_matrix(&cam, sh);
 
         texture_bind(t);
-        mesh_draw(&square);
+        chunk_draw(&chunk);
         glfwSwapBuffers(window);
     }
 
     shader_destroy(sh);
-    mesh_destroy(&square);
+    chunk_destroy(&chunk);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

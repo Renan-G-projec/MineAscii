@@ -36,7 +36,7 @@ Chunk chunk_create(void);
 void chunk_build_mesh(Chunk *); // NOT IMPLEMENTED YET
 
 // Draws the chunk
-void chunk_draw(Chunk *); // NOT IMPLEMENTED YET
+void chunk_draw(Chunk *);
 
 // Deletes and frees the memory
 void chunk_destroy(Chunk *);

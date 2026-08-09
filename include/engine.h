@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <math.h>
+#include "core/chunk.h"
 #include "graphics/texture.h"
 #include "graphics/camera.h"
 #include "graphics/input.h"

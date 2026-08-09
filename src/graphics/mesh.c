@@ -15,20 +15,20 @@ Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei 
 
     mesh.vbo = vbo_create();
     vbo_bind(mesh.vbo);
-    vbo_set_data(mesh.vbo, numVertices, vertices);
+    vbo_set_data(mesh.vbo, numVertices * sizeof(GLfloat), vertices);
 
     mesh.ebo = ebo_create();
     ebo_bind(mesh.ebo);
-    ebo_send_data(mesh.ebo, numIndices, indices);
+    ebo_send_data(mesh.ebo, numIndices * sizeof(GLuint), indices);
 
     vao_define(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), (void *)0); // Coords
-    vao_define(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GL_FLOAT))); // UV
+    vao_define(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat))); // UV
 
     // Unbinds for security
     // Due to only unbinding on constructor shall not have any reasonable impact on performance
     vao_unbind();
-    ebo_unbind();
     vbo_unbind();
+    ebo_unbind();
 
     return mesh;
 }

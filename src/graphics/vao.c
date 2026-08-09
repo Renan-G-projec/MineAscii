@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "vao.h"
+#include "graphics/vao.h"
 
 VAO vao_create(void) {
     VAO vao;

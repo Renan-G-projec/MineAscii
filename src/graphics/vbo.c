@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "vbo.h"
+#include "graphics/vbo.h"
 
 VBO vbo_create(void) {
     VBO v;

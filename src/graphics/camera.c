@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "camera.h"
+#include "graphics/camera.h"
 
 Camera camera_create(float window_ratio) {
     Camera c;

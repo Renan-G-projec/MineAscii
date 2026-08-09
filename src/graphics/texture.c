@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "texture.h"
+#include "graphics/texture.h"
 
 Texture texture_create(void) {
     Texture t;

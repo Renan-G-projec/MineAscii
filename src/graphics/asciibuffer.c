@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "asciibuffer.h"
+#include "graphics/asciibuffer.h"
 
 // About this file
 // So the asciibuffer responsability is to handle and print ascii characters onto the screen.

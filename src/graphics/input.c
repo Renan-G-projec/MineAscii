@@ -1,6 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "input.h"
-#include <GLFW/glfw3.h>
+#include "graphics/input.h"
 
 KeyboardCtx keyboardctx_create(void) {
     KeyboardCtx kb;

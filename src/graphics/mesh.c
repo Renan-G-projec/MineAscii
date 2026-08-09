@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "mesh.h"
+#include "graphics/mesh.h"
 
 Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei numIndices) {
     Mesh mesh;

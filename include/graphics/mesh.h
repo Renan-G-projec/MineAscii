@@ -4,10 +4,10 @@
 
 #include <glad/glad.h>
 #include <stdlib.h>
-#include "shader.h"
-#include "vbo.h"
-#include "vao.h"
-#include "ebo.h"
+#include "graphics/shader.h"
+#include "graphics/vbo.h"
+#include "graphics/vao.h"
+#include "graphics/ebo.h"
 
 typedef struct {
     GLfloat *vertices;

@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-#include "shader.h"
+#include "graphics/shader.h"
 
 typedef struct {
     vec3 position;

@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "shader.h"
+#include "graphics/shader.h"
 
 Shader shader_create(const char *vertex, const char *frag) {
     Shader program;

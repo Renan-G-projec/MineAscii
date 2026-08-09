@@ -6,11 +6,11 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <math.h>
-#include "texture.h"
-#include "camera.h"
-#include "input.h"
-#include "shader.h"
-#include "mesh.h"
+#include "graphics/texture.h"
+#include "graphics/camera.h"
+#include "graphics/input.h"
+#include "graphics/shader.h"
+#include "graphics/mesh.h"
 
 #define WINDOW_MODE_WIDTH 1280
 #define WINDOW_MODE_HEIGHT 720

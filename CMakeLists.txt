@@ -32,9 +32,23 @@ add_executable(MineAscii)
 find_package(OpenGL REQUIRED)
 
 target_sources(MineAscii PRIVATE
-    src/main.c src/asciibuffer.c src/shader.c src/engine.c src/vao.c src/vbo.c src/ebo.c src/mesh.c src/input.c src/camera.c
-    src/texture.c
-    external/glad/src/glad.c external/stb/src/stb_image.c
+    src/main.c
+    src/engine.c 
+
+    # Graphics
+    src/graphics/asciibuffer.c 
+    src/graphics/shader.c 
+    src/graphics/vao.c 
+    src/graphics/vbo.c 
+    src/graphics/ebo.c 
+    src/graphics/mesh.c 
+    src/graphics/input.c 
+    src/graphics/camera.c
+    src/graphics/texture.c
+
+    # Libraries
+    external/glad/src/glad.c 
+    external/stb/src/stb_image.c
 )
 
 target_include_directories(MineAscii PRIVATE

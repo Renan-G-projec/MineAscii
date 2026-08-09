@@ -1,5 +1,5 @@
 // Ad Maiorem Dei Gloriam!
-#include "ebo.h"
+#include "graphics/ebo.h"
 
 EBO ebo_create(void) {
     EBO ebo;

@@ -69,13 +69,14 @@ Chunk chunk_create(void) {
 void chunk_build_mesh(Chunk *chunk) {
     GLfloat *vertices = malloc(sizeof(GLfloat) * 120 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
     GLuint *indices = malloc(sizeof(GLuint) * 36 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
+
     unsigned int currentVertexIndex = 0;
     unsigned int currentIndiceIndex = 0;
 
     unsigned int solidBlocks = 0;
 
-    for (uint8_t x = 0; x < CHUNK_WIDTH; ++x) {
-        for (uint16_t y = 0; y < CHUNK_HEIGHT; ++y) {
+    for (int x = 0; x < CHUNK_WIDTH; ++x) {
+        for (int y = 0; y < CHUNK_HEIGHT; ++y) {
             for (uint8_t z = 0; z < CHUNK_DEPTH; ++z) {
                 if (chunk_get_block(chunk, (ivec3){x, y, z}) != BLOCK_AIR) {
 
@@ -157,9 +158,9 @@ inline WorldPos chunk_get_world_pos(Chunk *chunk) {
 void chunk_fill_block(Chunk *chunk, Block desiredBlock) {
     // Don't know if uint8_t is premature optimization POV: It was LOL
     // But shall fit well
-    for (uint8_t x = 0; x < CHUNK_WIDTH; ++x) {
-        for (uint16_t y = 0; y < CHUNK_HEIGHT; ++y) {
-            for (uint8_t z = 0; z < CHUNK_DEPTH; ++z) {
+    for (int x = 0; x < CHUNK_WIDTH; ++x) {
+        for (int y = 0; y < CHUNK_HEIGHT; ++y) {
+            for (int z = 0; z < CHUNK_DEPTH; ++z) {
                 chunk_set_block(chunk, desiredBlock, (ivec3){x, y, z});
             }
         }

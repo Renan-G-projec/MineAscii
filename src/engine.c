@@ -70,7 +70,7 @@ int8_t engine_init(void) {
     texture_load_png(t, "assets/textures/atlas.png");
 
     Chunk chunk = chunk_create();
-    //chunk_fill_block(&chunk, BLOCK_AIR);
+    chunk_fill_block(&chunk, BLOCK_AIR);
 
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 0});
 
@@ -98,6 +98,14 @@ int8_t engine_init(void) {
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 13, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 14, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 15, 0});
+    // Z ROW - double dashed
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 3});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 4});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 7});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 8});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 11});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 12});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 15});
     chunk_build_mesh(&chunk);
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");

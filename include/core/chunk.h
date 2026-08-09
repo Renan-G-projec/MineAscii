@@ -44,8 +44,8 @@ void chunk_destroy(Chunk *);
 void chunk_set_block(Chunk *, Block block, ivec3 coord); // Sets the block at the position. If outside the chunk, does nothing.
 Block chunk_get_block(Chunk *, ivec3 coord); // Gets the block at the position. Returns air outside the chunk.
 
-inline void chunk_set_world_pos(Chunk*, WorldPos coord); // Moves the chunk to the desired position.
-inline WorldPos chunk_get_world_pos(Chunk *); // Gets the chunk's world position
+void chunk_set_world_pos(Chunk*, WorldPos coord); // Moves the chunk to the desired position.
+WorldPos chunk_get_world_pos(Chunk *); // Gets the chunk's world position
 
 // Debug functions
 void chunk_fill_block(Chunk *, Block block);

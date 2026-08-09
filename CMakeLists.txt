@@ -37,6 +37,7 @@ target_sources(MineAscii PRIVATE
 
     # Core
     src/core/chunk.c
+    src/core/blocks.c
 
     # Graphics
     src/graphics/asciibuffer.c 

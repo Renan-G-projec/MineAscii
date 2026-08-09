@@ -35,6 +35,9 @@ target_sources(MineAscii PRIVATE
     src/main.c
     src/engine.c 
 
+    # Core
+    src/core/chunk.c
+
     # Graphics
     src/graphics/asciibuffer.c 
     src/graphics/shader.c 

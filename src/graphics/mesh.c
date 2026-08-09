@@ -3,23 +3,38 @@
 
 Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei numIndices) {
     Mesh mesh;
+    mesh.loadedData = false;
 
-    mesh.vertices = vertices;
-    mesh.indices = indices;
+    mesh_update(&mesh, vertices, indices, numVertices, numIndices);
 
-    mesh.numVertices = numVertices;
-    mesh.numIndices = numIndices;
+    return mesh;
+}
 
-    mesh.vao = vao_create();
-    vao_bind(mesh.vao);
+void mesh_draw(Mesh *mesh) {
+    vao_bind(mesh->vao);
+    glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, NULL);
+}
 
-    mesh.vbo = vbo_create();
-    vbo_bind(mesh.vbo);
-    vbo_set_data(mesh.vbo, numVertices * sizeof(GLfloat), vertices);
+void mesh_update(Mesh *mesh, GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei numIndices) {
 
-    mesh.ebo = ebo_create();
-    ebo_bind(mesh.ebo);
-    ebo_send_data(mesh.ebo, numIndices * sizeof(GLuint), indices);
+    // If the vertices were being used we clear up the mesh to start again
+    if (mesh->loadedData) {
+        mesh_destroy(mesh);
+    }
+
+    mesh->numVertices = numVertices;
+    mesh->numIndices = numIndices;
+
+    mesh->vao = vao_create();
+    vao_bind(mesh->vao);
+
+    mesh->vbo = vbo_create();
+    vbo_bind(mesh->vbo);
+    vbo_set_data(mesh->vbo, numVertices * sizeof(GLfloat), vertices);
+
+    mesh->ebo = ebo_create();
+    ebo_bind(mesh->ebo);
+    ebo_send_data(mesh->ebo, numIndices * sizeof(GLuint), indices);
 
     vao_define(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), (void *)0); // Coords
     vao_define(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat))); // UV
@@ -30,12 +45,7 @@ Mesh mesh_init(GLfloat *vertices, GLuint *indices, GLsizei numVertices, GLsizei 
     vbo_unbind();
     ebo_unbind();
 
-    return mesh;
-}
-
-void mesh_draw(Mesh *mesh) {
-    vao_bind(mesh->vao);
-    glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, NULL);
+    mesh->loadedData = true;
 }
 
 void mesh_destroy(Mesh *mesh) {

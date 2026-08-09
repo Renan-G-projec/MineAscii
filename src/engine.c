@@ -70,10 +70,11 @@ int8_t engine_init(void) {
     texture_load_png(t, "assets/textures/atlas.png");
 
     Chunk chunk = chunk_create();
-    chunk_fill_block(&chunk, BLOCK_AIR);
+    //chunk_fill_block(&chunk, BLOCK_AIR);
+
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 0});
 
     // X ROW - DOTTED
-    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){2, 0, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){4, 0, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){6, 0, 0});
@@ -81,6 +82,22 @@ int8_t engine_init(void) {
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){10, 0, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){12, 0, 0});
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){14, 0, 0});
+    // Y ROW - FULL
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 1, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 2, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 3, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 4, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 5, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 6, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 7, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 8, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 9, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 10, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 11, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 12, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 13, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 14, 0});
+    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 15, 0});
     chunk_build_mesh(&chunk);
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");

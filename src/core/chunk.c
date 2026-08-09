@@ -61,18 +61,12 @@ Chunk chunk_create(void) {
     chunk.worldPos = (WorldPos){0, 0, 0}; 
 
     // Not built yet
-    chunk.currentMesh = NULL;
+    chunk.mesh = mesh_init(NULL, NULL, 0, 0);
 
     return chunk;
 }
 
 void chunk_build_mesh(Chunk *chunk) {
-    if (chunk->currentMesh) {
-        mesh_destroy(chunk->currentMesh);
-    } else {
-        chunk->currentMesh = malloc(sizeof(Mesh));
-    }
-
     GLfloat *vertices = malloc(sizeof(GLfloat) * 120 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
     GLuint *indices = malloc(sizeof(GLuint) * 36 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
     unsigned int currentVertexIndex = 0;
@@ -105,20 +99,18 @@ void chunk_build_mesh(Chunk *chunk) {
         }
     }
 
-    *chunk->currentMesh = mesh_init(vertices, indices, currentVertexIndex, currentIndiceIndex);
+    mesh_update(&chunk->mesh, vertices, indices, currentVertexIndex, currentIndiceIndex);
     free(vertices);
     free(indices);
 }
 
 void chunk_draw(Chunk *chunk) {
-    mesh_draw(chunk->currentMesh);
+    mesh_draw(&chunk->mesh);
 }
 
 void chunk_destroy(Chunk *chunk) {
-    if (chunk->currentMesh) {
-        mesh_destroy(chunk->currentMesh);
-        free(chunk->currentMesh);
-    }
+    mesh_destroy(&chunk->mesh);
+
     if (chunk->blocks) {
         free(chunk->blocks);
     }

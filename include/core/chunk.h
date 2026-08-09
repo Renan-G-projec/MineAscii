@@ -24,7 +24,7 @@ typedef struct {
 
 typedef struct {
     Block *blocks;
-    Mesh *currentMesh;
+    Mesh mesh;
 
     WorldPos worldPos;
 } Chunk;

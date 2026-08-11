@@ -9,29 +9,29 @@
 
 typedef uint8_t Block;
 
-typedef struct {
-    int x;
-    int y;
-} UVint;
-
-typedef struct {
-    float u;
-    float v;
-} UV;
-
+// Defines the face of the cube on the 3 dimensional space
+// Represents 4 vertices each one
 typedef enum {
     FRONT,
     BACK,
-    TOP,
-    BOTTOM,
     LEFT,
-    RIGHT
-} Direction;
+    RIGHT,
+    TOP,
+    BOTTOM
+} CubeFace;
 
-// Get the coordinates to the defined block mapped on the atlas
-UVint getTextureUv(Block block, Direction dir);
+// Each one represents a vertex
+typedef enum {
+    BOTTOM_LEFT,
+    TOP_LEFT,
+    BOTTOM_RIGHT,
+    TOP_RIGHT
+} FaceCorner;
 
-// Normalizes to UV coordinates
-UV normalizeUVint(UVint uv);
+typedef struct {
+    GLfloat u, v;
+} UV;
+
+UV block_get_uv(Block block, CubeFace direction, FaceCorner corner);
 
 #endif

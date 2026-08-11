@@ -9,7 +9,7 @@ Camera camera_create(float window_ratio) {
 
     c.orientation[0] = 0.0f;
     c.orientation[1] = 0.0f;
-    c.orientation[2] = -1.0f;
+    c.orientation[2] = 1.0f;
 
     c.window_ratio = window_ratio;
     

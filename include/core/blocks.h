@@ -4,6 +4,7 @@
 
 #define BLOCK_AIR 0
 #define BLOCK_DIRT 1
+#define BLOCK_STONE 2
 
 #include <stdint.h>
 #include <glad/glad.h>

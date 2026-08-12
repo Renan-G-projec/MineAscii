@@ -109,12 +109,12 @@ void chunk_build_mesh(Chunk *chunk) {
             for (uint8_t z = 0; z < CHUNK_DEPTH; ++z) {
                 Block block = chunk_get_block(chunk, (ivec3){x, y, z});
                 if (block != BLOCK_AIR) {
-                    if (chunk_get_block(chunk, (ivec3){x, y + 1, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, TOP, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    if (chunk_get_block(chunk, (ivec3){x, y - 1, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, BOTTOM, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    if (chunk_get_block(chunk, (ivec3){x - 1, y, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, LEFT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    if (chunk_get_block(chunk, (ivec3){x + 1, y, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, RIGHT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    if (chunk_get_block(chunk, (ivec3){x, y, z - 1}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, FRONT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    if (chunk_get_block(chunk, (ivec3){x, y, z + 1}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, BACK, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y + 1, z}) == BLOCK_AIR) add_cube_face(block, TOP, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y - 1, z}) == BLOCK_AIR) add_cube_face(block, BOTTOM, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x - 1, y, z}) == BLOCK_AIR) add_cube_face(block, LEFT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x + 1, y, z}) == BLOCK_AIR) add_cube_face(block, RIGHT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y, z - 1}) == BLOCK_AIR) add_cube_face(block, FRONT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y, z + 1}) == BLOCK_AIR) add_cube_face(block, BACK, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
                     
                 }
             }

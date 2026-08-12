@@ -69,7 +69,12 @@ int8_t engine_init(void) {
     Texture t = texture_create();
     texture_load_png(t, "assets/textures/atlas.png");
 
+    chunk_init_shaders(sh);
+
     Chunk chunk = chunk_create();
+    float zoffset = 0;
+    int zactual = 0;
+
     chunk_fill_block(&chunk, BLOCK_AIR);
 
     chunk_set_block(&chunk, 2, (ivec3){0, 0, 0});
@@ -119,6 +124,12 @@ int8_t engine_init(void) {
 
         updateCameraInput(&cam, &kb);
         camera_send_matrix(&cam, sh);
+
+        if (keyboardctx_isKeyPressed(&kb, 'V')) zoffset += 0.4f;
+        if ((int)zoffset > zactual) {
+            zactual = (int)zoffset;
+            chunk_set_world_pos(&chunk, (WorldPos){0, 0, zactual});
+        }
 
         texture_bind(t);
         chunk_draw(&chunk);

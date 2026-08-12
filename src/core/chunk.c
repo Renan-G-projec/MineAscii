@@ -1,6 +1,9 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/chunk.h"
 
+// "Global" variable to the model location
+static GLuint modelLocation;
+
 // Helper function
 // Pushes to the array and changes the icon
 static void add_vertex(GLfloat *vertices, int *index, GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v) {
@@ -78,6 +81,10 @@ static void add_cube_face(Block block, CubeFace faceDirection, GLfloat *vertices
     add_square_indices(indices, indicesIndex);
 }
 
+void chunk_init_shaders(Shader sh) {
+    modelLocation = glGetUniformLocation(sh, "modelMatrix");
+}
+
 Chunk chunk_create(void) {
     Chunk chunk;
 
@@ -115,7 +122,6 @@ void chunk_build_mesh(Chunk *chunk) {
                     if (chunk_get_block(chunk, (ivec3){x + 1, y, z}) == BLOCK_AIR) add_cube_face(block, RIGHT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
                     if (chunk_get_block(chunk, (ivec3){x, y, z - 1}) == BLOCK_AIR) add_cube_face(block, FRONT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
                     if (chunk_get_block(chunk, (ivec3){x, y, z + 1}) == BLOCK_AIR) add_cube_face(block, BACK, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
-                    
                 }
             }
         }
@@ -127,6 +133,7 @@ void chunk_build_mesh(Chunk *chunk) {
 }
 
 void chunk_draw(Chunk *chunk) {
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, chunk->modelMat[0]);
     mesh_draw(&chunk->mesh);
 }
 
@@ -169,6 +176,7 @@ Block chunk_get_block(Chunk *chunk, ivec3 pos) {
 // Hope it not copies any random pointer
 inline void chunk_set_world_pos(Chunk *chunk, WorldPos pos) {
     chunk->worldPos = pos;
+    glm_mat4_identity(chunk->modelMat);
     glm_translate(chunk->modelMat, (vec3){pos.x, pos.y, pos.z});
 }
 

@@ -14,6 +14,7 @@
 #include <cglm/cglm.h>
 
 #include "core/blocks.h"
+#include "graphics/shader.h"
 #include "graphics/mesh.h"
 
 typedef struct {
@@ -29,6 +30,9 @@ typedef struct {
     WorldPos worldPos;
     mat4 modelMat; // Only recalculated when the world pos is changed.
 } Chunk;
+
+// Initializes the chunk shader and gets the uniforms location
+void chunk_init_shaders(Shader chunkShader);
 
 // Initializes the chunk and allocates memory.
 Chunk chunk_create(void);

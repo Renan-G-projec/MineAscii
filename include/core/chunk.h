@@ -27,6 +27,7 @@ typedef struct {
     Mesh mesh;
 
     WorldPos worldPos;
+    mat4 modelMat; // Only recalculated when the world pos is changed.
 } Chunk;
 
 // Initializes the chunk and allocates memory.

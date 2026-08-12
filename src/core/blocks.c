@@ -22,7 +22,7 @@ static const MappedPosition BLOCKS_UV[] = {
 UV block_get_uv(Block block, CubeFace cubeFace, FaceCorner faceCorner) {
     UV uv;
     
-    int mappedBlocks = sizeof(BLOCKS_UV) / 3;
+    int mappedBlocks = sizeof(BLOCKS_UV) / sizeof(BLOCKS_UV[0]) / 3;
 
     if (block > mappedBlocks) {
         uv.u = UNKNOWN_BLOCK.x * WIDTH_FACTOR;

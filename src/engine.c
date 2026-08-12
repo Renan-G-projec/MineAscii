@@ -72,7 +72,7 @@ int8_t engine_init(void) {
     Chunk chunk = chunk_create();
     chunk_fill_block(&chunk, BLOCK_AIR);
 
-    chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){0, 0, 0});
+    chunk_set_block(&chunk, 2, (ivec3){0, 0, 0});
 
     // X ROW - DOTTED
     chunk_set_block(&chunk, BLOCK_DIRT, (ivec3){2, 0, 0});

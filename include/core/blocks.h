@@ -6,6 +6,7 @@
 #define BLOCK_DIRT 1
 
 #include <stdint.h>
+#include <glad/glad.h>
 
 typedef uint8_t Block;
 

@@ -1,52 +1,82 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/chunk.h"
 
-float dirtVertices[] = {
-    // FRONT (Z = 0)
-    0.0f, 0.0f, 0.0f,  0.0f,     0.0625f * 5.0f,
-    1.0f, 0.0f, 0.0f,  0.03125f, 0.0625f * 5.0f,
-    1.0f, 1.0f, 0.0f,  0.03125f, 0.0625f * 6.0f,
-    0.0f, 1.0f, 0.0f,  0.0f,     0.0625f * 6.0f,
+// Helper function
+// Pushes to the array and changes the icon
+static void add_vertex(GLfloat *vertices, int *index, GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v) {
+    vertices[(*index)++] = x;
+    vertices[(*index)++] = y;
+    vertices[(*index)++] = z;
+    vertices[(*index)++] = u;
+    vertices[(*index)++] = v;
+}
 
-    // BACK (Z = 1)
-    1.0f, 0.0f, 1.0f,  0.0f,     0.0625f * 5.0f,
-    0.0f, 0.0f, 1.0f,  0.03125f, 0.0625f * 5.0f,
-    0.0f, 1.0f, 1.0f,  0.03125f, 0.0625f * 6.0f,
-    1.0f, 1.0f, 1.0f,  0.0f,     0.0625f * 6.0f,
+// Takes the indices array and populates 6 indices
+static void add_square_indices(GLuint *indices, unsigned int *index) {
+    int verticesOffset = (*index) / 6 * 4;
 
-    // LEFT (X = 0)
-    0.0f, 0.0f, 1.0f,  0.0f,     0.0625f * 5.0f,
-    0.0f, 0.0f, 0.0f,  0.03125f, 0.0625f * 5.0f,
-    0.0f, 1.0f, 0.0f,  0.03125f, 0.0625f * 6.0f,
-    0.0f, 1.0f, 1.0f,  0.0f,     0.0625f * 6.0f,
+    // First triangle
+    indices[(*index)++] = verticesOffset;
+    indices[(*index)++] = verticesOffset + 1;
+    indices[(*index)++] = verticesOffset + 2;
 
-    // RIGHT (X = 1)
-    1.0f, 0.0f, 0.0f,  0.0f,     0.0625f * 5.0f,
-    1.0f, 0.0f, 1.0f,  0.03125f, 0.0625f * 5.0f,
-    1.0f, 1.0f, 1.0f,  0.03125f, 0.0625f * 6.0f,
-    1.0f, 1.0f, 0.0f,  0.0f,     0.0625f * 6.0f,
+    // Second Triangle
+    indices[(*index)++] = verticesOffset + 2;
+    indices[(*index)++] = verticesOffset + 3;
+    indices[(*index)++] = verticesOffset;
+}
 
-    // TOP (Y = 1)
-    0.0f, 1.0f, 0.0f,  0.03125f * 3.0f, 0.0625f * 5.0f,
-    1.0f, 1.0f, 0.0f,  0.03125f * 4.0f, 0.0625f * 5.0f,
-    1.0f, 1.0f, 1.0f,  0.03125f * 4.0f, 0.0625f * 6.0f,
-    0.0f, 1.0f, 1.0f,  0.03125f * 3.0f, 0.0625f * 6.0f,
+// Adds and populates 4 vertices and 6 indices to make a cube face.
+static void add_cube_face(Block block, CubeFace faceDirection, GLfloat *vertices, GLuint *indices, int *verticesIndex, unsigned int *indicesIndex, int x, int y, int z) {
+    UV bottom_left = block_get_uv(block, faceDirection, BOTTOM_LEFT);
+    UV top_left = block_get_uv(block, faceDirection, TOP_LEFT);
+    UV bottom_right = block_get_uv(block, faceDirection, BOTTOM_RIGHT);
+    UV top_right = block_get_uv(block, faceDirection, TOP_RIGHT);
 
-    // DOWN (Y = 0)
-    0.0f, 0.0f, 1.0f,  0.03125f * 8.0f, 0.0625f * 11.0f,
-    1.0f, 0.0f, 1.0f,  0.03125f * 9.0f, 0.0625f * 11.0f,
-    1.0f, 0.0f, 0.0f,  0.03125f * 9.0f, 0.0625f * 12.0f,
-    0.0f, 0.0f, 0.0f,  0.03125f * 8.0f, 0.0625f * 12.0f,
-};
+    float realX, realY, realZ;
 
-unsigned int dirtIndices[] = {
-    0, 1, 2,  2, 3, 0,     // FRONT
-    4, 5, 6,  6, 7, 4,     // BACK
-    8, 9, 10, 10, 11, 8,   // LEFT
-    12, 13, 14, 14, 15, 12,// RIGHT
-    16, 17, 18, 18, 19, 16,// TOP
-    20, 21, 22, 22, 23, 20 // DOWN
-};
+    // Really bad code LOL. Author: myself
+    switch (faceDirection) {
+        case FRONT: 
+            add_vertex(vertices, verticesIndex, x, y, z, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x, y + 1, z, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x + 1, y, z, bottom_right.u, bottom_right.v);
+            break;
+        case BACK: 
+            add_vertex(vertices, verticesIndex, x, y, z + 1, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x, y + 1, z + 1, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z + 1, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x + 1, y, z + 1, bottom_right.u, bottom_right.v);
+            break;
+        case TOP:
+            add_vertex(vertices, verticesIndex, x, y + 1, z, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x, y + 1, z + 1, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z + 1, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z, bottom_right.u, bottom_right.v);
+            break;
+        case BOTTOM:
+            add_vertex(vertices, verticesIndex, x, y, z, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x, y, z + 1, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y, z + 1, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x + 1, y, z, bottom_right.u, bottom_right.v);
+            break;
+        case LEFT:
+            add_vertex(vertices, verticesIndex, x, y, z + 1, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x, y + 1, z + 1, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x, y + 1, z, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x, y, z, bottom_right.u, bottom_right.v);
+            break;
+        case RIGHT:
+            add_vertex(vertices, verticesIndex, x + 1, y, z + 1, bottom_left.u, bottom_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z + 1, top_left.u, top_left.v);
+            add_vertex(vertices, verticesIndex, x + 1, y + 1, z, top_right.u, top_right.v);
+            add_vertex(vertices, verticesIndex, x + 1, y, z, bottom_right.u, bottom_right.v);
+            break;
+    }
+    
+    add_square_indices(indices, indicesIndex);
+}
 
 Chunk chunk_create(void) {
     Chunk chunk;
@@ -58,7 +88,8 @@ Chunk chunk_create(void) {
     }
 
     // Default worldPos
-    chunk.worldPos = (WorldPos){0, 0, 0}; 
+    chunk.worldPos = (WorldPos){0, 0, 0};
+    glm_mat4_identity(chunk.modelMat);
 
     // Not built yet
     chunk.mesh = mesh_init(NULL, NULL, 0, 0);
@@ -73,28 +104,18 @@ void chunk_build_mesh(Chunk *chunk) {
     unsigned int currentVertexIndex = 0;
     unsigned int currentIndiceIndex = 0;
 
-    unsigned int solidBlocks = 0;
-
     for (int x = 0; x < CHUNK_WIDTH; ++x) {
         for (int y = 0; y < CHUNK_HEIGHT; ++y) {
             for (uint8_t z = 0; z < CHUNK_DEPTH; ++z) {
-                if (chunk_get_block(chunk, (ivec3){x, y, z}) != BLOCK_AIR) {
-
-                    // Copy the dirt vertice and translate it to world pos
-                    for (int i = 0; i < 24; ++i) {
-                        vertices[currentVertexIndex++] = x + dirtVertices[5 * i]; // X
-                        vertices[currentVertexIndex++] = y + dirtVertices[5 * i + 1]; // Y
-                        vertices[currentVertexIndex++] = z + dirtVertices[5 * i + 2]; // Z
-                        vertices[currentVertexIndex++] = dirtVertices[5 * i + 3]; // U
-                        vertices[currentVertexIndex++] = dirtVertices[5 * i + 4]; // V
-                    }
-
-                    // Copies the 
-                    for (int i = 0; i < 36 ; ++i) {
-                        indices[currentIndiceIndex++] = (solidBlocks * 24) + dirtIndices[i];
-                    }
-
-                    solidBlocks++;
+                Block block = chunk_get_block(chunk, (ivec3){x, y, z});
+                if (block != BLOCK_AIR) {
+                    if (chunk_get_block(chunk, (ivec3){x, y + 1, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, TOP, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y - 1, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, BOTTOM, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x - 1, y, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, LEFT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x + 1, y, z}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, RIGHT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y, z - 1}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, FRONT, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    if (chunk_get_block(chunk, (ivec3){x, y, z + 1}) == BLOCK_AIR) add_cube_face(BLOCK_DIRT, BACK, vertices, indices, &currentVertexIndex, &currentIndiceIndex, x, y, z);
+                    
                 }
             }
         }
@@ -148,6 +169,7 @@ Block chunk_get_block(Chunk *chunk, ivec3 pos) {
 // Hope it not copies any random pointer
 inline void chunk_set_world_pos(Chunk *chunk, WorldPos pos) {
     chunk->worldPos = pos;
+    glm_translate(chunk->modelMat, (vec3){pos.x, pos.y, pos.z});
 }
 
 inline WorldPos chunk_get_world_pos(Chunk *chunk) {

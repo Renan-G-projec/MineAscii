@@ -2,50 +2,6 @@
 
 #include "engine.h"
 
-void updateCameraInput(Camera* camera, KeyboardCtx *kb) {
-    
-    if (keyboardctx_isKeyPressed(kb, 'W')) {
-        glm_vec3_add(camera->orientation, camera->position, camera->position);
-    }
-    if (keyboardctx_isKeyPressed(kb, 'S')) {
-        glm_vec3_negate(camera->orientation);
-        glm_vec3_add(camera->orientation, camera->position, camera->position);
-        glm_vec3_negate(camera->orientation);
-    }
-    if (keyboardctx_isKeyPressed(kb, 'A')) {
-        vec3 horizontalAxis;
-        glm_cross(camera->orientation, (vec3){0, 1, 0}, horizontalAxis);
-
-        glm_vec3_negate(horizontalAxis);
-        glm_vec3_add(horizontalAxis, camera->position, camera->position);
-    }
-    if (keyboardctx_isKeyPressed(kb, 'D')) {
-        vec3 horizontalAxis;
-        glm_cross(camera->orientation, (vec3){0, 1, 0}, horizontalAxis);
-        
-        glm_vec3_add(horizontalAxis, camera->position, camera->position);
-    }
-
-    float rotX = 0, rotY = 0;
-    if (keyboardctx_isKeyPressed(kb, 'I')) {
-        rotY += 10;
-    }
-    if (keyboardctx_isKeyPressed(kb, 'K')) {
-        rotY -= 10;
-    }
-    if (keyboardctx_isKeyPressed(kb, 'L')) {
-        rotX += 10;
-    }
-    if (keyboardctx_isKeyPressed(kb, 'J')) {
-        rotX -= 10;
-    }
-
-    vec3 axisToRotateY;
-    glm_cross(camera->orientation, (vec3){0, 1, 0}, axisToRotateY);
-    glm_vec3_rotate(camera->orientation, glm_rad(rotY), axisToRotateY);
-    glm_vec3_rotate(camera->orientation, glm_rad(-rotX), (vec3){0, 1, 0});
-}
-
 int8_t engine_init(void) {
     if (!glfwInit()) {
         printf("Error initializing GLFW.\nExiting...\n");
@@ -63,7 +19,7 @@ int8_t engine_init(void) {
     Shader sh = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(sh);
 
-    Camera cam = camera_create(WINDOW_MODE_WIDTH / (float)WINDOW_MODE_HEIGHT);
+    Player player = player_create(&kb);
 
     glActiveTexture(0);
     Texture t = texture_create();
@@ -122,8 +78,8 @@ int8_t engine_init(void) {
         glClearColor(.1f, .2f, .4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        updateCameraInput(&cam, &kb);
-        camera_send_matrix(&cam, sh);
+        player_update(&player);
+        player_send_camera_matrix(&player, sh);
 
         if (keyboardctx_isKeyPressed(&kb, 'V')) zoffset += 0.4f;
         if ((int)zoffset > zactual) {

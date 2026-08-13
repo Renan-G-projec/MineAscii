@@ -3,22 +3,27 @@
 #define PLAYER_H
 
 #include <glad/glad.h>
+#include "engine.h"
+#include "graphics/input.h"
 #include "graphics/camera.h"
 
 typedef struct {
     Camera camera;
     vec3 position;
     vec3 orientation;
+
+    // Context settings
+    KeyboardCtx* keyboardContext;
 } Player;
 
 // Creates the player at default position {0, 0, 0}
-Player player_create(void);
+Player player_create(KeyboardCtx *keyboardContext);
 
 // Updates game Logic
 void player_update(Player *);
 
 // Sends the camera matrix
-void player_camera_send_matrix(Shader);
+void player_send_camera_matrix(Player *, Shader);
 
 // Destroys and frees memory
 void player_destroy(Player *);

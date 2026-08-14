@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <cglm/cglm.h>
+#include <perlin.h>
 
 #include "core/blocks.h"
 #include "graphics/shader.h"
@@ -46,11 +47,15 @@ void chunk_draw(Chunk *);
 // Deletes and frees the memory
 void chunk_destroy(Chunk *);
 
+// Helper functions
 void chunk_set_block(Chunk *, Block block, ivec3 coord); // Sets the block at the position. If outside the chunk, does nothing.
 Block chunk_get_block(Chunk *, ivec3 coord); // Gets the block at the position. Returns air outside the chunk.
 
 void chunk_set_world_pos(Chunk*, WorldPos coord); // Moves the chunk to the desired position.
 WorldPos chunk_get_world_pos(Chunk *); // Gets the chunk's world position
+
+// Generator
+void chunk_generate(Chunk *, int seed);
 
 // Debug functions
 void chunk_fill_block(Chunk *, Block block);

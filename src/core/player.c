@@ -65,11 +65,15 @@ void player_update_velocity(Player *player) {
         player->velocity[2] = -horizontalAxis[2] * PLAYER_DEFAULT_SPEED;
     }
 
-    if (!player->onGround) {
+    player->velocity[1] = 0;
+    if (keyboardctx_isKeyPressed(player->keyboardContext, 'Q')) player->velocity[1] = 1;
+    if (keyboardctx_isKeyPressed(player->keyboardContext, 'E')) player->velocity[1] = -1;
+
+    /*if (!player->onGround) {
         player->velocity[1] -= GRAVITY_DEFAULT;
     } else {
         player->velocity[1] = 0;
-    }
+    }*/
 }
 
 inline void player_update_position(Player *player) {

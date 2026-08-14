@@ -13,6 +13,9 @@ typedef struct {
     vec3 position;
     vec3 orientation;
 
+    // Speed settings
+    vec3 velocity;
+
     // Context settings
     KeyboardCtx* keyboardContext;
 } Player;
@@ -22,6 +25,12 @@ Player player_create(KeyboardCtx *keyboardContext);
 
 // Updates game Logic
 void player_update(Player *);
+
+// Sub helper functions
+void player_update_orientation(Player *);
+void player_update_velocity(Player *);
+void player_update_position(Player *);
+void player_update_camera(Player *);
 
 // Sends the camera matrix
 void player_send_camera_matrix(Player *, Shader);

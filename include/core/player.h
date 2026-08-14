@@ -3,6 +3,7 @@
 #define PLAYER_H
 
 #include <glad/glad.h>
+#include "configs.h"
 #include "engine.h"
 #include "graphics/input.h"
 #include "graphics/camera.h"

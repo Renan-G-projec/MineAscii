@@ -1,6 +1,10 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/player.h"
 
+static inline float clamp(float min, float val, float max) {
+    return (val > min ? (val < max ? val : max) : min);
+}
+
 Player player_create(KeyboardCtx *keyboardContext) {
     Player player;
 
@@ -79,9 +83,13 @@ void player_update_orientation(Player *player) {
         rotX -= 10 * PLAYER_SENSITIVITY;
     }
 
+
     vec3 axisToRotateY;
     glm_cross(player->orientation, (vec3){0, 1, 0}, axisToRotateY);
-    glm_vec3_rotate(player->orientation, glm_rad(rotY), axisToRotateY);
+
+    float upAngle = glm_vec3_angle((vec3){0, 1, 0}, player->orientation);
+
+    if ((upAngle > 0.2 || rotY < 0) && (upAngle < 2.9 || rotY > 0)) glm_vec3_rotate(player->orientation, glm_rad(rotY), axisToRotateY);
     glm_vec3_rotate(player->orientation, glm_rad(-rotX), (vec3){0, 1, 0});
 }
 

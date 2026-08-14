@@ -54,10 +54,11 @@ target_sources(MineAscii PRIVATE
     # Libraries
     external/glad/src/glad.c 
     external/stb/src/stb_image.c
+    external/perlin/src/perlin.c
 )
 
 target_include_directories(MineAscii PRIVATE
-    "include" "external/glad/include" "external/stb/include"
+    "include" "external/glad/include" "external/stb/include" "external/perlin/include"
 )
 
 target_link_libraries(MineAscii PRIVATE glfw cglm OpenGL::GL)

@@ -24,6 +24,7 @@ Player player_create(KeyboardCtx *keyboardContext) {
     player.velocity[2] = 0;
 
     player.keyboardContext = keyboardContext;
+    player.onGround = false;
 
     return player;
 }
@@ -33,6 +34,7 @@ void player_update(Player *player) {
     player_update_position(player);
     player_update_orientation(player);
     player_update_camera(player);   
+    player_update_on_ground(player);
 }
 
 void player_update_velocity(Player *player) {
@@ -61,6 +63,12 @@ void player_update_velocity(Player *player) {
 
         player->velocity[0] = -horizontalAxis[0] * PLAYER_DEFAULT_SPEED;
         player->velocity[2] = -horizontalAxis[2] * PLAYER_DEFAULT_SPEED;
+    }
+
+    if (!player->onGround) {
+        player->velocity[1] -= GRAVITY_DEFAULT;
+    } else {
+        player->velocity[1] = 0;
     }
 }
 
@@ -102,4 +110,17 @@ inline void player_update_camera(Player *player) {
 
 void player_send_camera_matrix(Player *player, Shader sh) {
     camera_send_matrix(&player->camera, sh);
+}
+
+void player_update_on_ground(Player *player) {
+    // To implement
+    // TODO: Add the world context pointer to the player
+
+    player->onGround = true;
+    return;
+}
+
+inline void player_set_position(Player *player, vec3 newPosition) {
+    glm_vec3_copy(newPosition, player->position);
+    player_update_camera(player);
 }

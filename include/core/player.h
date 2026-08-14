@@ -18,6 +18,9 @@ typedef struct {
 
     // Context settings
     KeyboardCtx* keyboardContext;
+
+    // Flags
+    bool onGround;
 } Player;
 
 // Creates the player at default position {0, 0, 0}
@@ -31,6 +34,7 @@ void player_update_orientation(Player *);
 void player_update_velocity(Player *);
 void player_update_position(Player *);
 void player_update_camera(Player *);
+void player_update_on_ground(Player *);
 
 // Sends the camera matrix
 void player_send_camera_matrix(Player *, Shader);

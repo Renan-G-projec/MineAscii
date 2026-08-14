@@ -3,6 +3,8 @@
 #define CONFIGS_H
 
 #define PLAYER_SENSITIVITY 0.4f
-#define PLAYER_DEFAULT_SPEED 0.4f;
+#define PLAYER_DEFAULT_SPEED 0.4f
+
+#define GRAVITY_DEFAULT 0.004f
 
 #endif

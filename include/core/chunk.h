@@ -9,7 +9,7 @@
 #define CHUNK_HEIGHT 256
 
 // This macros are meant for chunk generation
-#define CHUNK_BASE 120
+#define CHUNK_BASE 200
 
 #include <stdio.h>
 #include <stdlib.h>

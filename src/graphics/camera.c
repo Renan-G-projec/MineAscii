@@ -30,7 +30,7 @@ void camera_send_matrix(Camera *cam, Shader sh) {
     glm_lookat(cam->position, lookingPos, up, view);
 
     // Sets the projection matrix
-    glm_perspective(glm_rad(60.0f), cam->window_ratio, 0.001f, 100.0f, projection);
+    glm_perspective(glm_rad(60.0f), cam->window_ratio, 0.001f, 1000.0f, projection);
 
     glm_mat4_mul(projection, view, camMatrix);
 

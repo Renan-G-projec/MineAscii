@@ -9,8 +9,16 @@
 #include "graphics/input.h"
 #include "graphics/camera.h"
 
+
+typedef struct {
+    ivec3 block;
+    bool hit;
+} RaycastResult;
+
 typedef struct {
     Camera camera;
+    RaycastResult lookingAt;
+    
     vec3 position;
     vec3 orientation;
 
@@ -38,6 +46,9 @@ Player player_create(KeyboardCtx *keyboardContext);
 // Updates game Logic
 void player_update(Player *);
 
+// Draws the player and anything related to it
+void player_draw(Player *);
+
 // Sub helper functions
 void player_update_orientation(Player *);
 void player_update_velocity(Player *);
@@ -46,6 +57,9 @@ void player_snap_to_world(Player *player);
 void player_update_camera(Player *);
 void player_update_on_ground(Player *);
 void player_jump(Player *);
+
+// Drawing functions
+void player_raycast(Player *);
 
 // Sends the camera matrix
 void player_send_camera_matrix(Player *, Shader);

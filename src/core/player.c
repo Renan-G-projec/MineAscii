@@ -1,6 +1,8 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/player.h"
 
+// The static cube that will be rendered when the player 
+
 static inline float clamp(float min, float val, float max) {
     return (val > min ? (val < max ? val : max) : min);
 }
@@ -10,6 +12,8 @@ Player player_create(KeyboardCtx *keyboardContext) {
 
     // Really don't like how window ratio is passed here
     player.camera = camera_create((float)WINDOW_MODE_WIDTH / (float)WINDOW_MODE_HEIGHT);
+
+    player.lookingAt.hit = 0;
 
     player.orientation[0] = 0;
     player.orientation[1] = 0;
@@ -42,6 +46,7 @@ void player_update(Player *player) {
     player_update_velocity(player);
     player_snap_to_world(player);
     player_update_position(player);
+    player_raycast(player);
     player_update_orientation(player);
     player_update_camera(player);   
 }
@@ -153,4 +158,31 @@ inline void player_jump(Player *player) {
 inline void player_set_position(Player *player, vec3 newPosition) {
     glm_vec3_copy(newPosition, player->position);
     player_update_camera(player);
+}
+
+void player_raycast(Player *player) {
+    const float step = 0.5f;
+    float walkedDistance = 0;
+
+    vec3 ray;
+    glm_vec3_copy(player->camera.position, ray);
+
+    vec3 rayStepVector;
+    glm_vec3_scale(player->camera.orientation, step, rayStepVector);
+
+    bool hit = false;
+    while (!hit && walkedDistance <= player->blockRange) {
+        hit = world_get_block(player->worldContext, ray) != BLOCK_AIR;
+
+        glm_vec3_add(rayStepVector, ray, ray);
+        
+        walkedDistance += step;
+    }
+
+    player->lookingAt.hit = hit;
+    if (hit) {
+        player->lookingAt.block[0] = (int)ray[0];
+        player->lookingAt.block[1] = (int)ray[1];
+        player->lookingAt.block[2] = (int)ray[2];
+    }
 }

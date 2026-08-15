@@ -23,6 +23,8 @@ typedef struct {
     Texture globalAtlas;
     World world;
     Player player;
+
+    Shader tempShader; // Shall be of the world
 } Engine;
 
 int8_t engine_init(Engine *);

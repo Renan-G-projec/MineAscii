@@ -40,8 +40,8 @@ Player player_create(KeyboardCtx *keyboardContext) {
 void player_update(Player *player) {
     player_update_on_ground(player);
     player_update_velocity(player);
-    player_update_position(player);
     player_snap_to_world(player);
+    player_update_position(player);
     player_update_orientation(player);
     player_update_camera(player);   
 }
@@ -91,6 +91,16 @@ inline void player_update_position(Player *player) {
 
 void player_snap_to_world(Player *player) {
     // To implement
+    vec3 nextStep;
+
+    glm_vec3_copy(player->position, nextStep);
+    nextStep[1] += player->velocity[1];
+
+    bool willCollideVertically = world_get_block(player->worldContext, nextStep) != BLOCK_AIR; // This still does not consider the height or any box
+    if (willCollideVertically) {
+        // TODO: Check when the player is going up
+        player->position[1] = ((int)nextStep[1]) + 1;
+    }
 }
 
 void player_update_orientation(Player *player) {
@@ -132,7 +142,8 @@ void player_send_camera_matrix(Player *player, Shader sh) {
 
 void player_update_on_ground(Player *player) {
     vec3 nextPosition;
-    glm_vec3_add(player->position, player->velocity, nextPosition);
+    glm_vec3_copy(player->position, nextPosition);
+    nextPosition[1] -= 0.1f;
     
     player->onGround = (world_get_block(player->worldContext, nextPosition) != BLOCK_AIR);
 

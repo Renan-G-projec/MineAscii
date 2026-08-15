@@ -140,6 +140,11 @@ void player_update_on_ground(Player *player) {
     return;
 }
 
+// Nothing is allocated in the player itself at the time
+void player_destroy(Player *player) {
+    return;
+}
+
 inline void player_jump(Player *player) {
     player->velocity[1] = player->jumpForce;
     player->onGround = false;

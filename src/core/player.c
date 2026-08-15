@@ -29,7 +29,7 @@ Player player_create(KeyboardCtx *keyboardContext) {
     player.jumpForce = 0.7f;
     player.sensitivity = 0.4f;
     player.speed = 0.3f;
-
+    player.blockRange = 4.0f;
 
     player.onGround = false;
 

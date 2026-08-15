@@ -26,6 +26,7 @@ typedef struct {
     float jumpForce;
     float sensitivity;
     float speed; // Not the actual velocity. The speed multiplier.
+    float blockRange; // Defines how far the player can destroy or put blocks
 
     // Flags
     bool onGround;

@@ -8,6 +8,7 @@
 #include <math.h>
 #include "core/chunk.h"
 #include "core/player.h"
+#include "core/world.h"
 #include "graphics/texture.h"
 #include "graphics/camera.h"
 #include "graphics/input.h"

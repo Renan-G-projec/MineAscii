@@ -39,6 +39,7 @@ target_sources(MineAscii PRIVATE
     src/core/chunk.c
     src/core/blocks.c
     src/core/player.c
+    src/core/world.c
 
     # Graphics
     src/graphics/asciibuffer.c 

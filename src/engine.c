@@ -27,12 +27,7 @@ int8_t engine_init(void) {
 
     chunk_init_shaders(sh);
 
-    Chunk chunk = chunk_create();
-    float zoffset = 0;
-    int zactual = 0;
-
-    chunk_generate(&chunk, 1);
-    chunk_build_mesh(&chunk);
+    World world = world_create(193384);
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");
     glUniform1i(uTex0, 0);
@@ -43,22 +38,16 @@ int8_t engine_init(void) {
         glClearColor(.1f, .2f, .4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        world_draw(&world);
         player_update(&player);
         player_send_camera_matrix(&player, sh);
 
-        if (keyboardctx_isKeyPressed(&kb, 'V')) zoffset += 0.4f;
-        if ((int)zoffset > zactual) {
-            zactual = (int)zoffset;
-            chunk_set_world_pos(&chunk, (WorldPos){0, 0, zactual});
-        }
-
         texture_bind(t);
-        chunk_draw(&chunk);
         glfwSwapBuffers(window);
     }
 
+    world_destroy(&world);
     shader_destroy(sh);
-    chunk_destroy(&chunk);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

@@ -191,7 +191,7 @@ void chunk_generate(Chunk* chunk, int seed) {
     uint16_t heightMap[CHUNK_WIDTH * CHUNK_DEPTH];
     for (int x = 0; x < CHUNK_WIDTH; ++x) {
         for (int z = 0; z < CHUNK_DEPTH; ++z) {
-            float raw = pnoise2d((chunk->worldPos.x * CHUNK_WIDTH + x) * 0.01, (chunk->worldPos.z * CHUNK_DEPTH + z) * 0.01, 4, 1, seed);
+            float raw = pnoise2d((chunk->worldPos.x + x) * 0.01, (chunk->worldPos.z + z) * 0.01, 4, 1, seed);
             heightMap[x * CHUNK_DEPTH + z] = CHUNK_BASE + (raw * (CHUNK_HEIGHT - CHUNK_BASE));
         }
     }

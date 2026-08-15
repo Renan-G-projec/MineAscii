@@ -31,7 +31,7 @@ int8_t engine_init(void) {
     float zoffset = 0;
     int zactual = 0;
 
-    chunk_generate(&chunk, 0);
+    chunk_generate(&chunk, 1);
     chunk_build_mesh(&chunk);
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");

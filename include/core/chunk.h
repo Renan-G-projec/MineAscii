@@ -8,6 +8,9 @@
 #define CHUNK_DEPTH 16
 #define CHUNK_HEIGHT 256
 
+// This macros are meant for chunk generation
+#define CHUNK_BASE 120
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

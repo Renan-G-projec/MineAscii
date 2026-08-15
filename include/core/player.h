@@ -23,6 +23,7 @@ typedef struct {
 
     // Configs
     float height; // Defines the heioght of the camera target. Points to the 'head'
+    float jumpForce;
 
     // Flags
     bool onGround;
@@ -41,6 +42,7 @@ void player_update_position(Player *);
 void player_snap_to_world(Player *player);
 void player_update_camera(Player *);
 void player_update_on_ground(Player *);
+void player_jump(Player *);
 
 // Sends the camera matrix
 void player_send_camera_matrix(Player *, Shader);

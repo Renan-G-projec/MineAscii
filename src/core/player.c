@@ -26,6 +26,7 @@ Player player_create(KeyboardCtx *keyboardContext) {
     player.keyboardContext = keyboardContext;
 
     player.height = 2.0f;
+    player.jumpForce = 0.7f;
 
     player.onGround = false;
 
@@ -68,6 +69,10 @@ void player_update_velocity(Player *player) {
 
         player->velocity[0] = -horizontalAxis[0] * PLAYER_DEFAULT_SPEED;
         player->velocity[2] = -horizontalAxis[2] * PLAYER_DEFAULT_SPEED;
+    }
+
+    if (keyboardctx_isKeyPressed(player->keyboardContext, ' ') && player->onGround) {
+        player_jump(player);
     }
 
     if (!player->onGround) {
@@ -129,6 +134,11 @@ void player_update_on_ground(Player *player) {
     player->onGround = (world_get_block(player->worldContext, nextPosition) != BLOCK_AIR);
 
     return;
+}
+
+inline void player_jump(Player *player) {
+    player->velocity[1] = player->jumpForce;
+    player->onGround = false;
 }
 
 inline void player_set_position(Player *player, vec3 newPosition) {

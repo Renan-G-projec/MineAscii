@@ -16,8 +16,9 @@ typedef struct {
 // Formatted in this form
 static const MappedPosition BLOCKS_UV[] = {
     // SIDES    // TOP      // BOTTOM
+    {8, 11},     {8, 11},     {8, 11}, // DIRT
+    {19, 5},    {19, 5},    {19, 5},  // STONE
     {0, 5},     {3, 5},     {8, 11}, // GRASS
-    {19, 5},    {19, 5},    {19, 5}  // STONE
 };
 
 UV block_get_uv(Block block, CubeFace cubeFace, FaceCorner faceCorner) {

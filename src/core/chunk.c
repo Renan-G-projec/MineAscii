@@ -202,6 +202,7 @@ void chunk_generate(Chunk* chunk, int seed) {
                 if (y <= heightMap[x * CHUNK_DEPTH + z]) {
                     Block block = BLOCK_STONE;
                     if ((heightMap[x * CHUNK_DEPTH + z] - y) < 3) block = BLOCK_DIRT;
+                    if ((heightMap[x * CHUNK_DEPTH + z] - y) < 1) block = BLOCK_GRASS;
                     chunk_set_block(chunk, block, (ivec3){x, y, z});
                 }
             }

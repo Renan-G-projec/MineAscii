@@ -20,7 +20,7 @@ int8_t engine_init(void) {
     shader_bind(sh);
 
     Player player = player_create(&kb);
-    player_set_position(&player, (vec3){5.0f, -30.f, 1.f});
+    player_set_position(&player, (vec3){5.0f, -50.f, 1.f});
 
     glActiveTexture(0);
     Texture t = texture_create();

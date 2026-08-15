@@ -24,7 +24,11 @@ Player player_create(KeyboardCtx *keyboardContext) {
     player.velocity[2] = 0;
 
     player.keyboardContext = keyboardContext;
+
+    player.height = 2.0f;
+
     player.onGround = false;
+
 
     return player;
 }
@@ -105,6 +109,7 @@ inline void player_update_camera(Player *player) {
     // This function will handle the case of the different camera states
     // For now, only the first person so only copies are made.
     glm_vec3_copy(player->position, player->camera.position);
+    player->camera.position[1] += player->height;
     glm_vec3_copy(player->orientation, player->camera.orientation);
 }
 

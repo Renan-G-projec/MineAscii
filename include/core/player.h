@@ -21,6 +21,9 @@ typedef struct {
     KeyboardCtx* keyboardContext;
     World *worldContext;
 
+    // Configs
+    float height; // Defines the heioght of the camera target. Points to the 'head'
+
     // Flags
     bool onGround;
 } Player;

@@ -2,6 +2,10 @@
 #include "engine.h"
 
 int main(void) {
-    engine_init();
+    Engine engine;
+    if (!engine_init(&engine)) {
+        puts("Error: Could not start the engine. Exiting...\n");
+        return -1;
+    }
     return 0;
 }

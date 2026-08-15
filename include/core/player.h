@@ -5,7 +5,6 @@
 #include <glad/glad.h>
 #include "core/world.h"
 #include "configs.h"
-#include "engine.h"
 #include "graphics/input.h"
 #include "graphics/camera.h"
 

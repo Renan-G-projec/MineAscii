@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <math.h>
+#include "core/player.h"
 #include "core/chunk.h"
 #include "core/player.h"
 #include "core/world.h"
@@ -15,10 +16,17 @@
 #include "graphics/shader.h"
 #include "graphics/mesh.h"
 
-#define WINDOW_MODE_WIDTH 1280
-#define WINDOW_MODE_HEIGHT 720
+typedef struct {
+    GLFWwindow *window;
+    KeyboardCtx keyboardContext;
 
-// Initializes the engine. If fails, returns -1. Runs all the game until finish.
-int8_t engine_init(void);
+    Texture globalAtlas;
+    World world;
+    Player player;
+} Engine;
+
+int8_t engine_init(Engine *);
+void engine_start_gameloop(Engine *);
+void engine_destroy(Engine *);
 
 #endif

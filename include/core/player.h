@@ -24,6 +24,8 @@ typedef struct {
     // Configs
     float height; // Defines the heioght of the camera target. Points to the 'head'
     float jumpForce;
+    float sensitivity;
+    float speed; // Not the actual velocity. The speed multiplier.
 
     // Flags
     bool onGround;

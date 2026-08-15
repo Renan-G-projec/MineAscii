@@ -27,6 +27,9 @@ Player player_create(KeyboardCtx *keyboardContext) {
 
     player.height = 2.0f;
     player.jumpForce = 0.7f;
+    player.sensitivity = 0.4f;
+    player.speed = 0.3f;
+
 
     player.onGround = false;
 
@@ -49,26 +52,26 @@ void player_update_velocity(Player *player) {
 
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'W')) {
         // We copy the x and z directions
-        player->velocity[0] = player->orientation[0] * PLAYER_DEFAULT_SPEED;
-        player->velocity[2] = player->orientation[2] * PLAYER_DEFAULT_SPEED;
+        player->velocity[0] = player->orientation[0] * player->speed;
+        player->velocity[2] = player->orientation[2] * player->speed;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'S')) {
-        player->velocity[0] = -player->orientation[0] * PLAYER_DEFAULT_SPEED;
-        player->velocity[2] = -player->orientation[2] * PLAYER_DEFAULT_SPEED;
+        player->velocity[0] = -player->orientation[0] * player->speed;
+        player->velocity[2] = -player->orientation[2] * player->speed;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'D')) {
         vec3 horizontalAxis;
         glm_cross(player->orientation, (vec3){0, 1, 0}, horizontalAxis);
 
-        player->velocity[0] = horizontalAxis[0] * PLAYER_DEFAULT_SPEED;
-        player->velocity[2] = horizontalAxis[2] * PLAYER_DEFAULT_SPEED;
+        player->velocity[0] = horizontalAxis[0] * player->speed;
+        player->velocity[2] = horizontalAxis[2] * player->speed;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'A')) {
         vec3 horizontalAxis;
         glm_cross(player->orientation, (vec3){0, 1, 0}, horizontalAxis);
 
-        player->velocity[0] = -horizontalAxis[0] * PLAYER_DEFAULT_SPEED;
-        player->velocity[2] = -horizontalAxis[2] * PLAYER_DEFAULT_SPEED;
+        player->velocity[0] = -horizontalAxis[0] * player->speed;
+        player->velocity[2] = -horizontalAxis[2] * player->speed;
     }
 
     if (keyboardctx_isKeyPressed(player->keyboardContext, ' ') && player->onGround) {
@@ -93,16 +96,16 @@ void player_snap_to_world(Player *player) {
 void player_update_orientation(Player *player) {
     float rotX = 0, rotY = 0;
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'I')) {
-        rotY += 10 * PLAYER_SENSITIVITY;
+        rotY += 10 * player->sensitivity;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'K')) {
-        rotY -= 10 * PLAYER_SENSITIVITY;
+        rotY -= 10 * player->sensitivity;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'L')) {
-        rotX += 10 * PLAYER_SENSITIVITY;
+        rotX += 10 * player->sensitivity;
     }
     if (keyboardctx_isKeyPressed(player->keyboardContext, 'J')) {
-        rotX -= 10 * PLAYER_SENSITIVITY;
+        rotX -= 10 * player->sensitivity;
     }
 
 

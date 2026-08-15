@@ -38,3 +38,17 @@ void world_destroy(World *world) {
     }
     free(world->chunks);
 }
+
+Block world_get_block(World *world, vec3 coords) {
+    int chunkX = floorf(coords[0] / (float)CHUNK_WIDTH);
+    int chunkZ = floorf(coords[2] / (float)CHUNK_DEPTH);
+
+    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
+    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return BLOCK_AIR;
+
+    int x = (int)floorf(coords[0]) % CHUNK_WIDTH;
+    int y = CHUNK_HEIGHT + (int)floorf(coords[1]) % CHUNK_HEIGHT;
+    int z = (int)floorf(coords[2]) % CHUNK_DEPTH;
+
+    return chunk_get_block(&(world->chunks[chunkIndex]), (ivec3){x, y, z});
+}

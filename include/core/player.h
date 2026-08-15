@@ -3,6 +3,7 @@
 #define PLAYER_H
 
 #include <glad/glad.h>
+#include "core/world.h"
 #include "configs.h"
 #include "engine.h"
 #include "graphics/input.h"
@@ -18,6 +19,7 @@ typedef struct {
 
     // Context settings
     KeyboardCtx* keyboardContext;
+    World *worldContext;
 
     // Flags
     bool onGround;

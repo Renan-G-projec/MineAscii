@@ -20,6 +20,7 @@ int8_t engine_init(void) {
     shader_bind(sh);
 
     Player player = player_create(&kb);
+    player_set_position(&player, (vec3){5.0f, -30.f, 1.f});
 
     glActiveTexture(0);
     Texture t = texture_create();
@@ -28,6 +29,7 @@ int8_t engine_init(void) {
     chunk_init_shaders(sh);
 
     World world = world_create(193384);
+    player.worldContext = &world;
 
     GLint uTex0 = glGetUniformLocation(sh, "tex0");
     glUniform1i(uTex0, 0);

@@ -5,6 +5,6 @@
 #define PLAYER_SENSITIVITY 0.4f
 #define PLAYER_DEFAULT_SPEED 0.4f
 
-#define GRAVITY_DEFAULT 0.004f
+#define GRAVITY_DEFAULT 0.04f
 
 #endif

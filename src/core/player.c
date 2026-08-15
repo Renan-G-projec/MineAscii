@@ -37,6 +37,7 @@ void player_update(Player *player) {
     player_update_on_ground(player);
     player_update_velocity(player);
     player_update_position(player);
+    player_snap_to_world(player);
     player_update_orientation(player);
     player_update_camera(player);   
 }
@@ -78,6 +79,10 @@ void player_update_velocity(Player *player) {
 
 inline void player_update_position(Player *player) {
     glm_vec3_add(player->position, player->velocity, player->position);
+}
+
+void player_snap_to_world(Player *player) {
+    // To implement
 }
 
 void player_update_orientation(Player *player) {

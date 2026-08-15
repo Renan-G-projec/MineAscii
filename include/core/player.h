@@ -38,6 +38,7 @@ void player_update(Player *);
 void player_update_orientation(Player *);
 void player_update_velocity(Player *);
 void player_update_position(Player *);
+void player_snap_to_world(Player *player);
 void player_update_camera(Player *);
 void player_update_on_ground(Player *);
 

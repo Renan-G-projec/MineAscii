@@ -1,11 +1,16 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/world.h"
 
+static GLuint modelLocation;
+
 World world_create(int seed) {
     World world;
 
-    world.seed = seed;
     world.chunks = (Chunk *)malloc(WORLD_CHUNKS * WORLD_CHUNKS * sizeof(Chunk));
+
+    world.seed = seed;
+    world.shader = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
+    shader_bind(world.shader);
 
     if (!world.chunks) {
         printf("Error: Could not generate world. Out of memory.\n");
@@ -22,12 +27,17 @@ World world_create(int seed) {
         }     
     }
 
+    GLint uTex0 = glGetUniformLocation(world.shader, "tex0");
+    glUniform1i(uTex0, 0);
+
+    modelLocation = glGetUniformLocation(world.shader, "modelMatrix");
+
     return world;
 }
 
 void world_draw(World *world) {
     for (int i = 0; i < (WORLD_CHUNKS * WORLD_CHUNKS); ++i) {
-        chunk_draw(&world->chunks[i]);   
+        chunk_draw(&world->chunks[i], modelLocation);   
     }
 }
 
@@ -36,6 +46,7 @@ void world_destroy(World *world) {
     for (int i = 0; i < (WORLD_CHUNKS * WORLD_CHUNKS); ++i) {
         chunk_destroy(&world->chunks[i]);
     }
+    shader_destroy(world->shader);
     free(world->chunks);
 }
 

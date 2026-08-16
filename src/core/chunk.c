@@ -1,9 +1,6 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/chunk.h"
 
-// "Global" variable to the model location
-static GLuint modelLocation;
-
 // Helper function
 // Pushes to the array and changes the icon
 static void add_vertex(GLfloat *vertices, int *index, GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v) {
@@ -81,10 +78,6 @@ static void add_cube_face(Block block, CubeFace faceDirection, GLfloat *vertices
     add_square_indices(indices, indicesIndex);
 }
 
-void chunk_init_shaders(Shader sh) {
-    modelLocation = glGetUniformLocation(sh, "modelMatrix");
-}
-
 Chunk chunk_create(void) {
     Chunk chunk;
 
@@ -132,8 +125,8 @@ void chunk_build_mesh(Chunk *chunk) {
     free(indices);
 }
 
-void chunk_draw(Chunk *chunk) {
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, chunk->modelMat[0]);
+void chunk_draw(Chunk *chunk, GLuint modelUniformLocation) {
+    glUniformMatrix4fv(modelUniformLocation, 1, GL_FALSE, chunk->modelMat[0]);
     mesh_draw(&chunk->mesh);
 }
 

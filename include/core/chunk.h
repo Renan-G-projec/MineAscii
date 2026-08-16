@@ -35,9 +35,6 @@ typedef struct {
     mat4 modelMat; // Only recalculated when the world pos is changed.
 } Chunk;
 
-// Initializes the chunk shader and gets the uniforms location
-void chunk_init_shaders(Shader chunkShader);
-
 // Initializes the chunk and allocates memory.
 Chunk chunk_create(void);
 
@@ -45,7 +42,7 @@ Chunk chunk_create(void);
 void chunk_build_mesh(Chunk *); // NOT IMPLEMENTED YET
 
 // Draws the chunk
-void chunk_draw(Chunk *);
+void chunk_draw(Chunk *, GLuint modelUniformLocation);
 
 // Deletes and frees the memory
 void chunk_destroy(Chunk *);

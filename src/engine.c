@@ -15,9 +15,6 @@ int8_t engine_init(Engine *engine) {
     engine->keyboardContext = keyboardctx_create();
     keyboardctx_bindwindowctx(&engine->keyboardContext, engine->window);
 
-    engine->tempShader = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
-    shader_bind(engine->tempShader);
-
     engine->player = player_create(&engine->keyboardContext);
     player_set_position(&engine->player, (vec3){5.0f, -50.f, 1.f});
 
@@ -25,13 +22,8 @@ int8_t engine_init(Engine *engine) {
     engine->globalAtlas = texture_create();
     texture_load_png(engine->globalAtlas, "assets/textures/atlas.png");
 
-    chunk_init_shaders(engine->tempShader);
-
     engine->world = world_create(193384);
     engine->player.worldContext = &engine->world;
-
-    GLint uTex0 = glGetUniformLocation(engine->tempShader, "tex0");
-    glUniform1i(uTex0, 0);
 
     glEnable(GL_DEPTH_TEST);
     return 0;
@@ -48,7 +40,7 @@ static void engine_render(Engine *engine) {
 
     world_draw(&engine->world);
     
-    player_send_camera_matrix(&engine->player, engine->tempShader);
+    player_send_camera_matrix(&engine->player, engine->world.shader);
 
     texture_bind(engine->globalAtlas);
     glfwSwapBuffers(engine->window);
@@ -63,7 +55,6 @@ void engine_start_gameloop(Engine *engine) {
 
 void engine_destroy(Engine *engine) {
     world_destroy(&engine->world);
-    shader_destroy(engine->tempShader);
     player_destroy(&engine->player);
     glfwDestroyWindow(engine->window);
     glfwTerminate();

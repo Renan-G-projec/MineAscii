@@ -7,9 +7,10 @@
 #define WORLD_CHUNKS 9
 
 typedef struct {
-    int seed;
-
     Chunk *chunks;
+    
+    int seed;
+    Shader shader;
 } World;
 
 // Generates the world

@@ -109,6 +109,8 @@ void player_update(Player *player) {
     player_update_camera(player);   
 }
 
+// Todo: Refactor this
+// This function is handling complex input logic
 void player_update_velocity(Player *player) {
     player->velocity[0] = 0;
     player->velocity[2] = 0;

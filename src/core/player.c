@@ -222,28 +222,9 @@ inline void player_set_position(Player *player, vec3 newPosition) {
 }
 
 void player_raycast(Player *player) {
-    const float step = 0.1f;
-    float walkedDistance = 0;
-
-    vec3 ray;
-    glm_vec3_copy(player->camera.position, ray);
-
-    vec3 rayStepVector;
-    glm_vec3_scale(player->camera.orientation, step, rayStepVector);
-
-    bool hit = false;
-    while (!hit && walkedDistance <= player->blockRange) {
-        hit = world_get_block(player->worldContext, ray) != BLOCK_AIR;
-        
-        glm_vec3_add(rayStepVector, ray, ray);
-        
-        walkedDistance += step;
-    }
-
-    player->lookingAt.hit = hit;
-    if (hit) {
-        player->lookingAt.block[0] = (int)floorf(ray[0]);
-        player->lookingAt.block[1] = (int)floorf(ray[1]);
-        player->lookingAt.block[2] = (int)floorf(ray[2]);
-    }
+    RaycastResult result = raycast_traceray(player->worldContext, (vec3){player->position[0], player->position[1] + player->height, player->position[2]}, player->orientation, 0.1f, 4.0f);
+    player->lookingAt.hit = result.hit;
+    player->lookingAt.block[0] = result.block[0];
+    player->lookingAt.block[1] = result.block[1];
+    player->lookingAt.block[2] = result.block[2];
 }

@@ -5,14 +5,9 @@
 #include <glad/glad.h>
 #include "core/world.h"
 #include "configs.h"
+#include "core/raycast.h"
 #include "graphics/input.h"
 #include "graphics/camera.h"
-
-
-typedef struct {
-    ivec3 block;
-    bool hit;
-} RaycastResult;
 
 typedef struct {
     Camera camera;

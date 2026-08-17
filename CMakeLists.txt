@@ -40,6 +40,7 @@ target_sources(MineAscii PRIVATE
     src/core/blocks.c
     src/core/player.c
     src/core/world.c
+    src/core/raycast.c
 
     # Graphics
     src/graphics/asciibuffer.c 

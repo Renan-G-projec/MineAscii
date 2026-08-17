@@ -143,6 +143,10 @@ void player_update_velocity(Player *player) {
         player_jump(player);
     }
 
+    if (keyboardctx_isKeyPressed(player->keyboardContext, 'Q') && player->lookingAt.hit) {
+        world_set_block_i(player->worldContext, BLOCK_AIR, player->lookingAt.block);
+    }
+
     if (!player->onGround) {
         player->velocity[1] -= GRAVITY_DEFAULT;
     } else {

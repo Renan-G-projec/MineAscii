@@ -104,4 +104,5 @@ void world_set_block_i(World *world, Block block, ivec3 coords) {
     int z = coords[2] % CHUNK_DEPTH;
 
     chunk_set_block(&(world->chunks[chunkIndex]), block, (ivec3){x, y, z});
+    chunk_build_mesh(&(world->chunks[chunkIndex])); // Really weird way and side effect how it is implemented.
 }

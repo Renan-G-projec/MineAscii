@@ -36,6 +36,7 @@ World world_create(int seed) {
 }
 
 void world_draw(World *world) {
+    shader_bind(world->shader);
     for (int i = 0; i < (WORLD_CHUNKS * WORLD_CHUNKS); ++i) {
         chunk_draw(&world->chunks[i], modelLocation);   
     }

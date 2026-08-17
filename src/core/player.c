@@ -1,10 +1,64 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/player.h"
 
-// The static cube that will be rendered when the player 
-
 static inline float clamp(float min, float val, float max) {
     return (val > min ? (val < max ? val : max) : min);
+}
+
+// The cube that marks the block the blayer is looking at
+// Marked static so it will go to the global scope, not making the code awful
+static GLfloat cube_vertices[] = {
+    0, 0, 0,    1, 0, 0,    0, 1, 0,   1, 1, 0,   0, 0, 1,    1, 0, 1,    0, 1, 1,    1, 1, 1, // Vertices on the x axis
+    0, 0, 0,    0, 1, 0,    0, 0, 1,   0, 1, 1,   1, 0, 1,    1, 1, 1,    1, 0, 0,    1, 1, 0, // Vertices on the y axis
+    0, 0, 0,    0, 0, 1,    1, 0, 0,   1, 0, 1,   0, 1, 0,    0, 1, 1,    1, 1, 0,    1, 1, 1  // Vertices on the z axis 
+};
+
+static bool initializedHighlightCube = false;
+static Shader highlightCubeShader = 0;
+static VBO highlightCubeVBO = 0;
+static VAO highlightCubeVAO = 0;
+
+static GLuint highlightCubeModelMatUniform = 0;
+
+static void initHightlightCube(void) {
+    highlightCubeVAO = vao_create();
+    vao_bind(highlightCubeVAO);
+    highlightCubeVBO = vbo_create();
+    vbo_bind(highlightCubeVBO);
+
+    vbo_set_data(highlightCubeVBO, sizeof(cube_vertices), cube_vertices);
+    vao_define(0, 3, GL_FLOAT, 3 * sizeof(GLfloat), (void *)0);
+
+    vao_unbind();
+    vbo_unbind();
+
+    highlightCubeShader = shader_create("./assets/shaders/highlightCube.vert", "./assets/shaders/highlightCube.frag");
+    shader_bind(highlightCubeShader);
+
+    highlightCubeModelMatUniform = glGetUniformLocation(highlightCubeShader, "modelMatrix");
+
+    initializedHighlightCube = true;
+    glLineWidth(2.f);
+}
+
+static void drawHighlightCube(Player *player) {
+    shader_bind(highlightCubeShader);
+    vao_bind(highlightCubeVAO);
+    player_send_camera_matrix(player, highlightCubeShader);
+
+    mat4 cubeMat;
+    glm_mat4_identity(cubeMat);
+    glm_translate(cubeMat, (vec3){player->lookingAt.block[0], player->lookingAt.block[1], player->lookingAt.block[2]});
+
+    glUniformMatrix4fv(highlightCubeModelMatUniform, 1, GL_FALSE, cubeMat[0]);
+
+    glDrawArrays(GL_LINES, 0, 24);
+}
+
+static void destroyHighlightCube(void) {
+    vbo_destroy(highlightCubeVBO);
+    vao_destroy(highlightCubeVAO);
+    initializedHighlightCube = false;
 }
 
 Player player_create(KeyboardCtx *keyboardContext) {
@@ -37,8 +91,12 @@ Player player_create(KeyboardCtx *keyboardContext) {
 
     player.onGround = false;
 
-
+    if (!initializedHighlightCube) initHightlightCube();
     return player;
+}
+
+void player_draw(Player *player) {
+    if (player->lookingAt.hit) drawHighlightCube(player);
 }
 
 void player_update(Player *player) {
@@ -147,6 +205,7 @@ void player_update_on_ground(Player *player) {
 
 // Nothing is allocated in the player itself at the time
 void player_destroy(Player *player) {
+    if (initializedHighlightCube) destroyHighlightCube();
     return;
 }
 
@@ -161,7 +220,7 @@ inline void player_set_position(Player *player, vec3 newPosition) {
 }
 
 void player_raycast(Player *player) {
-    const float step = 0.5f;
+    const float step = 0.1f;
     float walkedDistance = 0;
 
     vec3 ray;

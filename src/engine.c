@@ -43,6 +43,8 @@ static void engine_render(Engine *engine) {
     player_send_camera_matrix(&engine->player, engine->world.shader);
 
     texture_bind(engine->globalAtlas);
+
+    player_draw(&engine->player);
     glfwSwapBuffers(engine->window);
 }
 

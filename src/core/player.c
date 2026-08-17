@@ -38,7 +38,7 @@ static void initHightlightCube(void) {
     highlightCubeModelMatUniform = glGetUniformLocation(highlightCubeShader, "modelMatrix");
 
     initializedHighlightCube = true;
-    glLineWidth(2.f);
+    glLineWidth(5.f);
 }
 
 static void drawHighlightCube(Player *player) {
@@ -232,7 +232,7 @@ void player_raycast(Player *player) {
     bool hit = false;
     while (!hit && walkedDistance <= player->blockRange) {
         hit = world_get_block(player->worldContext, ray) != BLOCK_AIR;
-
+        
         glm_vec3_add(rayStepVector, ray, ray);
         
         walkedDistance += step;
@@ -240,8 +240,8 @@ void player_raycast(Player *player) {
 
     player->lookingAt.hit = hit;
     if (hit) {
-        player->lookingAt.block[0] = (int)ray[0];
-        player->lookingAt.block[1] = (int)ray[1];
-        player->lookingAt.block[2] = (int)ray[2];
+        player->lookingAt.block[0] = (int)floorf(ray[0]);
+        player->lookingAt.block[1] = (int)floorf(ray[1]);
+        player->lookingAt.block[2] = (int)floorf(ray[2]);
     }
 }

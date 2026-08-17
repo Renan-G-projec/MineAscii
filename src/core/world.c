@@ -64,3 +64,44 @@ Block world_get_block(World *world, vec3 coords) {
 
     return chunk_get_block(&(world->chunks[chunkIndex]), (ivec3){x, y, z});
 }
+
+Block world_get_block_i(World *world, ivec3 coords) {
+    int chunkX = coords[0] / CHUNK_WIDTH;
+    int chunkZ = coords[2] / CHUNK_DEPTH;
+
+    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
+    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return BLOCK_AIR;
+
+    int x = coords[0] % CHUNK_WIDTH;
+    int y = CHUNK_HEIGHT + coords[1] % CHUNK_HEIGHT;
+    int z = coords[2] % CHUNK_DEPTH;
+
+    return chunk_get_block(&(world->chunks[chunkIndex]), (ivec3){x, y, z});
+}
+
+void world_set_block(World *world, Block block, vec3 coords) {
+    int chunkX = floorf(coords[0] / (float)CHUNK_WIDTH);
+    int chunkZ = floorf(coords[2] / (float)CHUNK_DEPTH);
+
+    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
+    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return;
+
+    int x = (int)floorf(coords[0]) % CHUNK_WIDTH;
+    int y = CHUNK_HEIGHT + (int)floorf(coords[1]) % CHUNK_HEIGHT;
+    int z = (int)floorf(coords[2]) % CHUNK_DEPTH;
+    chunk_set_block(&(world->chunks[chunkIndex]), block, (ivec3){x, y, z});
+}
+
+void world_set_block_i(World *world, Block block, ivec3 coords) {
+    int chunkX = coords[0] / CHUNK_WIDTH;
+    int chunkZ = coords[2] / CHUNK_DEPTH;
+
+    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
+    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return;
+
+    int x = coords[0] % CHUNK_WIDTH;
+    int y = CHUNK_HEIGHT + coords[1] % CHUNK_HEIGHT;
+    int z = coords[2] % CHUNK_DEPTH;
+
+    chunk_set_block(&(world->chunks[chunkIndex]), block, (ivec3){x, y, z});
+}

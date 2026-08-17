@@ -24,5 +24,9 @@ void world_destroy(World *world);
 
 // Helpers
 Block world_get_block(World *, vec3 coordinates);
+Block world_get_block_i(World *, ivec3 coordinates);
+
+void world_set_block(World *, Block block, vec3 coordinates);
+void world_set_block_i(World *, Block block, ivec3 coordinates);
 
 #endif

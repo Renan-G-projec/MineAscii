@@ -7,6 +7,7 @@
 
 typedef struct {
     ivec3 block;
+    CubeFace face;
     bool hit;
 } RaycastResult;
 

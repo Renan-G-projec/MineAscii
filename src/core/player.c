@@ -96,6 +96,8 @@ Player player_create(KeyboardCtx *keyboardContext)
 
     player.onGround = false;
 
+    player.input = (PlayerInput){0};
+
     if (!initializedHighlightCube)
         initHightlightCube();
     return player;
@@ -109,6 +111,7 @@ void player_draw(Player *player)
 
 void player_update(Player *player)
 {
+    player_update_input(player);
     player_update_on_ground(player);
     player_update_velocity(player);
     player_snap_to_world(player);
@@ -120,23 +123,34 @@ void player_update(Player *player)
 
 // Todo: Refactor this
 // This function is handling complex input logic
+void player_update_input(Player *player) {
+    player->input.forward = keyboardctx_isKeyPressed(player->keyboardContext, 'W');
+    player->input.backward = keyboardctx_isKeyPressed(player->keyboardContext, 'S');
+    player->input.leftward = keyboardctx_isKeyPressed(player->keyboardContext, 'A');
+    player->input.rightward = keyboardctx_isKeyPressed(player->keyboardContext, 'D');
+
+    player->input.jump = keyboardctx_isKeyPressed(player->keyboardContext, ' ');
+    player->input.breakBlock = keyboardctx_isKeyPressed(player->keyboardContext, 'Q');
+    player->input.putBlock = keyboardctx_isKeyPressed(player->keyboardContext, 'E');
+}
+
 void player_update_velocity(Player *player)
 {
     player->velocity[0] = 0;
     player->velocity[2] = 0;
 
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'W'))
+    if (player->input.forward)
     {
         // We copy the x and z directions
         player->velocity[0] = player->orientation[0] * player->speed;
         player->velocity[2] = player->orientation[2] * player->speed;
     }
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'S'))
+    if (player->input.backward)
     {
         player->velocity[0] = -player->orientation[0] * player->speed;
         player->velocity[2] = -player->orientation[2] * player->speed;
     }
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'D'))
+    if (player->input.rightward)
     {
         vec3 horizontalAxis;
         glm_cross(player->orientation, (vec3){0, 1, 0}, horizontalAxis);
@@ -144,7 +158,7 @@ void player_update_velocity(Player *player)
         player->velocity[0] = horizontalAxis[0] * player->speed;
         player->velocity[2] = horizontalAxis[2] * player->speed;
     }
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'A'))
+    if (player->input.leftward)
     {
         vec3 horizontalAxis;
         glm_cross(player->orientation, (vec3){0, 1, 0}, horizontalAxis);
@@ -153,17 +167,17 @@ void player_update_velocity(Player *player)
         player->velocity[2] = -horizontalAxis[2] * player->speed;
     }
 
-    if (keyboardctx_isKeyPressed(player->keyboardContext, ' ') && player->onGround)
+    if (player->input.jump && player->onGround)
     {
         player_jump(player);
     }
 
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'Q') && player->lookingAt.hit)
+    if (player->input.breakBlock && player->lookingAt.hit)
     {
         world_set_block_i(player->worldContext, BLOCK_AIR, player->lookingAt.block);
     }
 
-    if (keyboardctx_isKeyPressed(player->keyboardContext, 'E') && player->lookingAt.hit)
+    if (player->input.putBlock && player->lookingAt.hit)
     {
         ivec3 direction;
         glm_ivec3_copy(player->lookingAt.block, direction);

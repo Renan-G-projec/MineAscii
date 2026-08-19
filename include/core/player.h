@@ -10,6 +10,16 @@
 #include "graphics/camera.h"
 
 typedef struct {
+    bool forward;
+    bool backward;
+    bool leftward;
+    bool rightward;
+    bool jump;
+    bool breakBlock;
+    bool putBlock; 
+} PlayerInput;
+
+typedef struct {
     Camera camera;
     RaycastResult lookingAt;
     
@@ -32,7 +42,10 @@ typedef struct {
 
     // Flags
     bool onGround;
+
+    PlayerInput input;
 } Player;
+
 
 // Creates the player at default position {0, 0, 0}
 Player player_create(KeyboardCtx *keyboardContext);
@@ -45,6 +58,7 @@ void player_draw(Player *);
 
 // Sub helper functions
 void player_update_orientation(Player *);
+void player_update_input(Player *);
 void player_update_velocity(Player *);
 void player_update_position(Player *);
 void player_snap_to_world(Player *player);

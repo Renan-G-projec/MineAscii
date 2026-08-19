@@ -42,6 +42,9 @@ target_sources(MineAscii PRIVATE
     src/core/world.c
     src/core/raycast.c
 
+    # Util for the core
+    src/util/worldChunkHashmap.c
+
     # Graphics
     src/graphics/asciibuffer.c 
     src/graphics/shader.c 

@@ -25,7 +25,10 @@ void chunkhashmap_clear(ChunkHashmap *);
 // Gets the chunk by the world pos
 Chunk *chunkhashmap_get(ChunkHashmap *, WorldPos key);
 
-// Sets the chunk by the world pos
-void *chunkhashmap_set(ChunkHashmap *, WorldPos key, Chunk);
+// Sets the chunk by the world pos. Returns the new chunk pointer
+Chunk *chunkhashmap_set(ChunkHashmap *, WorldPos key, Chunk);
+
+// Deletes the chunk
+void chunkhashmap_delete(ChunkHashmap *, WorldPos key);
 
 #endif

@@ -3,29 +3,35 @@
 
 static GLuint modelLocation;
 
+static inline int floor_div(int a, int b) {
+    return (a < 0) ? ((a - b + 1) / b) : (a/b);
+}
+
+static inline int floor_mod(int a, int b) {
+    int mod = a % b;
+    return mod < 0 ? mod + b : mod;
+}
+
+// Helps trackign if a chunk should be rendered
+static inline bool chunk_shall_be_rendered(WorldPos renderPosition, WorldPos chunkPosition, short renderDistance) {
+    bool overlapsOnX = chunkPosition.x >= (renderPosition.x - renderDistance) && chunkPosition.x <= (renderPosition.x + renderDistance);
+    bool overlapsOnZ = chunkPosition.z >= (renderPosition.z - renderDistance) && chunkPosition.z <= (renderPosition.z + renderDistance);
+
+    return overlapsOnX && overlapsOnZ;
+}
+
+
 World world_create(int seed) {
     World world;
-
-    world.chunks = (Chunk *)malloc(WORLD_CHUNKS * WORLD_CHUNKS * sizeof(Chunk));
 
     world.seed = seed;
     world.shader = shader_create("./assets/shaders/main.vert", "./assets/shaders/main.frag");
     shader_bind(world.shader);
 
-    if (!world.chunks) {
-        printf("Error: Could not generate world. Out of memory.\n");
-        exit(-1);
-    }
-
-    for (int x = 0; x < WORLD_CHUNKS; ++x) {
-        for (int z = 0; z < WORLD_CHUNKS; ++z) {
-            int chunkIndex = x * WORLD_CHUNKS + z;
-            world.chunks[chunkIndex] = chunk_create();
-            chunk_set_world_pos(&(world.chunks[chunkIndex]), (WorldPos){x * CHUNK_WIDTH, -CHUNK_HEIGHT, z * CHUNK_DEPTH});
-            chunk_generate(&(world.chunks[chunkIndex]), seed);
-            chunk_build_mesh(&(world.chunks[chunkIndex]));
-        }     
-    }
+    memset(world.loadedChunks, 0, sizeof(world.loadedChunks));
+    world.chunkMap = chunkhashmap_create();
+    
+    world_load_new_chunks(&world, (WorldPos){0, 0, 0});
 
     GLint uTex0 = glGetUniformLocation(world.shader, "tex0");
     glUniform1i(uTex0, 0);
@@ -37,18 +43,48 @@ World world_create(int seed) {
 
 void world_draw(World *world) {
     shader_bind(world->shader);
-    for (int i = 0; i < (WORLD_CHUNKS * WORLD_CHUNKS); ++i) {
-        chunk_draw(&world->chunks[i], modelLocation);   
+    for (int i = 0; i < (WORLD_RENDER_DISTANCE * 4 * WORLD_RENDER_DISTANCE); ++i) {
+        chunk_draw(world->loadedChunks[i], modelLocation);   
     }
 }
 
-void world_destroy(World *world) {
-    if (!world->chunks) return;
-    for (int i = 0; i < (WORLD_CHUNKS * WORLD_CHUNKS); ++i) {
-        chunk_destroy(&world->chunks[i]);
+// TODO: Improve readbility and unload older chunks
+
+void world_load_new_chunks(World *world, WorldPos position) {
+
+    for (int x = -WORLD_RENDER_DISTANCE; x < WORLD_RENDER_DISTANCE; ++x) {
+        for (int z = -WORLD_RENDER_DISTANCE; z < WORLD_RENDER_DISTANCE; ++z) {
+            int index = (x + WORLD_RENDER_DISTANCE) * 2 * WORLD_RENDER_DISTANCE + (z + WORLD_RENDER_DISTANCE);
+            Chunk *chunk = world->loadedChunks[index];
+            if (!chunk) continue;
+            if (!chunk_shall_be_rendered(world->loadedChunksPosition, chunk->worldPos, WORLD_RENDER_DISTANCE * 16)) {
+                chunkhashmap_delete(&world->chunkMap, chunk->worldPos);
+            };
+        }
     }
+
+    for (int x = -WORLD_RENDER_DISTANCE; x < WORLD_RENDER_DISTANCE; ++x) {
+        for (int z = -WORLD_RENDER_DISTANCE; z < WORLD_RENDER_DISTANCE; ++z) {
+            Chunk *currentChunk = chunkhashmap_get(&world->chunkMap, (WorldPos){x * CHUNK_WIDTH, 0, z * CHUNK_DEPTH});
+            if (!currentChunk) {
+                Chunk chunk = chunk_create();
+                chunk_set_world_pos(&chunk, (WorldPos){x * CHUNK_WIDTH, 0, z * CHUNK_DEPTH});
+                currentChunk = chunkhashmap_set(&world->chunkMap, chunk_get_world_pos(&chunk), chunk);
+                chunk_generate(currentChunk, world->seed);
+                chunk_build_mesh(currentChunk);
+            }
+
+            int index = (x + WORLD_RENDER_DISTANCE) * 2 * WORLD_RENDER_DISTANCE + (z + WORLD_RENDER_DISTANCE);
+            world->loadedChunks[index] = currentChunk;
+        }
+    }
+
+    world->loadedChunksPosition = position;
+}
+
+void world_destroy(World *world) {
+    chunkhashmap_clear(&world->chunkMap);
     shader_destroy(world->shader);
-    free(world->chunks);
 }
 
 inline Block world_get_block(World *world, vec3 coords) {
@@ -56,17 +92,22 @@ inline Block world_get_block(World *world, vec3 coords) {
 }
 
 Block world_get_block_i(World *world, ivec3 coords) {
-    int chunkX = coords[0] / CHUNK_WIDTH;
-    int chunkZ = coords[2] / CHUNK_DEPTH;
+    WorldPos chunkPos = {
+        floor_div(coords[0], CHUNK_WIDTH) * CHUNK_WIDTH,
+        0, 
+        floor_div(coords[2], CHUNK_DEPTH) * CHUNK_DEPTH
+    };
+    Chunk *chunk = chunkhashmap_get(&world->chunkMap, chunkPos);
+    if (!chunk) return BLOCK_AIR;
 
-    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
-    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return BLOCK_AIR;
+    int localX, localY, localZ;
+    localX = floor_mod(coords[0], CHUNK_WIDTH);
+    localY = (coords[1]);
+    localZ = floor_mod(coords[2], CHUNK_DEPTH);
 
-    int x = coords[0] % CHUNK_WIDTH;
-    int y = CHUNK_HEIGHT + coords[1] % CHUNK_HEIGHT;
-    int z = coords[2] % CHUNK_DEPTH;
-
-    return chunk_get_block(&(world->chunks[chunkIndex]), (ivec3){x, y, z});
+    ivec3 localCoords = {localX, localY, localZ};
+    
+    return chunk_get_block(chunk, localCoords);
 }
 
 inline void world_set_block(World *world, Block block, vec3 coords) {
@@ -74,16 +115,21 @@ inline void world_set_block(World *world, Block block, vec3 coords) {
 }
 
 void world_set_block_i(World *world, Block block, ivec3 coords) {
-    int chunkX = coords[0] / CHUNK_WIDTH;
-    int chunkZ = coords[2] / CHUNK_DEPTH;
+    WorldPos chunkPos = {
+        floor_div(coords[0], CHUNK_WIDTH) * CHUNK_WIDTH,
+        0, 
+        floor_div(coords[2], CHUNK_DEPTH) * CHUNK_DEPTH
+    };
+    Chunk *chunk = chunkhashmap_get(&world->chunkMap, chunkPos);
+    if (!chunk) return;
 
-    int chunkIndex = chunkX * WORLD_CHUNKS + chunkZ;
-    if (chunkIndex < 0 || chunkIndex >= WORLD_CHUNKS * WORLD_CHUNKS) return;
+    int localX, localY, localZ;
+    localX = floor_mod(coords[0], CHUNK_WIDTH);
+    localY = (coords[1]);
+    localZ = floor_mod(coords[2], CHUNK_DEPTH);
 
-    int x = coords[0] % CHUNK_WIDTH;
-    int y = CHUNK_HEIGHT + coords[1] % CHUNK_HEIGHT;
-    int z = coords[2] % CHUNK_DEPTH;
-
-    chunk_set_block(&(world->chunks[chunkIndex]), block, (ivec3){x, y, z});
-    chunk_build_mesh(&(world->chunks[chunkIndex])); // Really weird way and side effect how it is implemented.
+    ivec3 localCoords = {localX, localY, localZ};
+    
+    chunk_set_block(chunk, block, localCoords);
+    chunk_build_mesh(chunk);
 }

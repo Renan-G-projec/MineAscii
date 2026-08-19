@@ -16,7 +16,7 @@ int8_t engine_init(Engine *engine) {
     keyboardctx_bindwindowctx(&engine->keyboardContext, engine->window);
 
     engine->player = player_create(&engine->keyboardContext);
-    player_set_position(&engine->player, (vec3){5.0f, -50.f, 1.f});
+    player_set_position(&engine->player, (vec3){5.0f, CHUNK_HEIGHT, 1.f});
 
     glActiveTexture(0);
     engine->globalAtlas = texture_create();
@@ -49,6 +49,7 @@ static void engine_render(Engine *engine) {
 }
 
 void engine_start_gameloop(Engine *engine) {
+    glfwSwapInterval(1);
     while (!glfwWindowShouldClose(engine->window)) {
         engine_update(engine);
         engine_render(engine);

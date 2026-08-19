@@ -33,7 +33,7 @@ ChunkHashmap chunkhashmap_create() {
 }
 
 void chunkhashmap_clear(ChunkHashmap *chunkHashmap) {
-    for (int i =0; i < NUM_BUCKETS; ++i) {
+    for (int i = 0; i < NUM_BUCKETS; ++i) {
         struct ChunkHashmapNode *current = chunkHashmap->buckets[i];
         while (current) {
             chunk_destroy(&current->chunk);
@@ -57,7 +57,7 @@ Chunk *chunkhashmap_get(ChunkHashmap *chunkHashmap, WorldPos key) {
     return NULL;
 }
 
-void *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk) {
+Chunk *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk) {
     unsigned int chunkNodeIndex = hash_world_pos(key);
     struct ChunkHashmapNode *node = chunkHashmap->buckets[chunkNodeIndex];
 
@@ -67,4 +67,23 @@ void *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk) {
     newOne->next = node;
 
     chunkHashmap->buckets[chunkNodeIndex] = newOne;
+    return &newOne->chunk;
 };
+
+void chunkhashmap_delete(ChunkHashmap *chunkHashmap, WorldPos key) {
+    struct ChunkHashmapNode *node = chunkHashmap->buckets[hash_world_pos(key)];
+    
+    while (node) {
+        struct ChunkHashmapNode *parent = node;
+        node = node->next;
+
+        if (!node) return;
+
+        if (world_pos_compare(key, node->key)) {
+            parent->next = node->next;
+            chunk_destroy(&node->chunk);
+            free(node);
+            return;
+        };
+    }
+}

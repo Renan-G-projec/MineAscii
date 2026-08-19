@@ -6,7 +6,6 @@
 #include "core/chunk.h"
 #include "util/worldChunkHashmap.h"
 
-#define WORLD_CHUNKS 9
 #define WORLD_RENDER_DISTANCE 4
 
 typedef struct {

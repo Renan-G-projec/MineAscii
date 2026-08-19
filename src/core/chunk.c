@@ -170,7 +170,7 @@ Block chunk_get_block(Chunk *chunk, ivec3 pos) {
 inline void chunk_set_world_pos(Chunk *chunk, WorldPos pos) {
     chunk->worldPos = pos;
     glm_mat4_identity(chunk->modelMat);
-    glm_translate(chunk->modelMat, (vec3){pos.x, pos.y, pos.z});
+    glm_translate(chunk->modelMat, (vec3){pos.x * CHUNK_WIDTH, pos.y * CHUNK_HEIGHT, pos.z * CHUNK_DEPTH});
 }
 
 inline WorldPos chunk_get_world_pos(Chunk *chunk) {
@@ -184,7 +184,7 @@ void chunk_generate(Chunk* chunk, int seed) {
     uint16_t heightMap[CHUNK_WIDTH * CHUNK_DEPTH];
     for (int x = 0; x < CHUNK_WIDTH; ++x) {
         for (int z = 0; z < CHUNK_DEPTH; ++z) {
-            float raw = pnoise2d((chunk->worldPos.x + x) * 0.01, (chunk->worldPos.z + z) * 0.01, 4, 1, seed);
+            float raw = pnoise2d((chunk->worldPos.x * CHUNK_WIDTH + x) * 0.01, (chunk->worldPos.z * CHUNK_DEPTH + z) * 0.01, 4, 1, seed);
             heightMap[x * CHUNK_DEPTH + z] = CHUNK_BASE + (raw * (CHUNK_HEIGHT - CHUNK_BASE));
         }
     }

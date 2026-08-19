@@ -57,7 +57,7 @@ void world_load_new_chunks(World *world, WorldPos position) {
             int index = (x + WORLD_RENDER_DISTANCE) * 2 * WORLD_RENDER_DISTANCE + (z + WORLD_RENDER_DISTANCE);
             Chunk *chunk = world->loadedChunks[index];
             if (!chunk) continue;
-            if (!chunk_shall_be_rendered(world->loadedChunksPosition, chunk->worldPos, WORLD_RENDER_DISTANCE * 16)) {
+            if (!chunk_shall_be_rendered(world->loadedChunksPosition, chunk->worldPos, WORLD_RENDER_DISTANCE)) {
                 chunkhashmap_delete(&world->chunkMap, chunk->worldPos);
             };
         }
@@ -68,7 +68,7 @@ void world_load_new_chunks(World *world, WorldPos position) {
             Chunk *currentChunk = chunkhashmap_get(&world->chunkMap, (WorldPos){x * CHUNK_WIDTH, 0, z * CHUNK_DEPTH});
             if (!currentChunk) {
                 Chunk chunk = chunk_create();
-                chunk_set_world_pos(&chunk, (WorldPos){x * CHUNK_WIDTH, 0, z * CHUNK_DEPTH});
+                chunk_set_world_pos(&chunk, (WorldPos){x, 0, z});
                 currentChunk = chunkhashmap_set(&world->chunkMap, chunk_get_world_pos(&chunk), chunk);
                 chunk_generate(currentChunk, world->seed);
                 chunk_build_mesh(currentChunk);
@@ -93,9 +93,9 @@ inline Block world_get_block(World *world, vec3 coords) {
 
 Block world_get_block_i(World *world, ivec3 coords) {
     WorldPos chunkPos = {
-        floor_div(coords[0], CHUNK_WIDTH) * CHUNK_WIDTH,
+        floor_div(coords[0], CHUNK_WIDTH),
         0, 
-        floor_div(coords[2], CHUNK_DEPTH) * CHUNK_DEPTH
+        floor_div(coords[2], CHUNK_DEPTH)
     };
     Chunk *chunk = chunkhashmap_get(&world->chunkMap, chunkPos);
     if (!chunk) return BLOCK_AIR;
@@ -116,9 +116,9 @@ inline void world_set_block(World *world, Block block, vec3 coords) {
 
 void world_set_block_i(World *world, Block block, ivec3 coords) {
     WorldPos chunkPos = {
-        floor_div(coords[0], CHUNK_WIDTH) * CHUNK_WIDTH,
+        floor_div(coords[0], CHUNK_WIDTH),
         0, 
-        floor_div(coords[2], CHUNK_DEPTH) * CHUNK_DEPTH
+        floor_div(coords[2], CHUNK_DEPTH)
     };
     Chunk *chunk = chunkhashmap_get(&world->chunkMap, chunkPos);
     if (!chunk) return;

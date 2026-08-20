@@ -1,7 +1,8 @@
 // Ad Maiorem Dei Gloriam!
 #include "util/worldChunkHashmap.h"
 
-static inline unsigned int hash_world_pos(WorldPos worldPos) {
+static inline unsigned int hash_world_pos(WorldPos worldPos)
+{
     const unsigned long long k1 = 14020252567694004749ULL;
     const unsigned long long k2 = 9695998579374968831ULL;
     const unsigned long long k3 = 2860486313ULL;
@@ -18,24 +19,30 @@ static inline unsigned int hash_world_pos(WorldPos worldPos) {
     return hash % NUM_BUCKETS;
 }
 
-static inline bool world_pos_compare(WorldPos a, WorldPos b) {
+inline bool world_pos_compare(WorldPos a, WorldPos b)
+{
     return (a.x == b.x && a.y == b.y && a.z == b.z);
 }
 
-ChunkHashmap chunkhashmap_create() {
+ChunkHashmap chunkhashmap_create()
+{
     ChunkHashmap chunkHashmap;
 
-    for (int i = 0; i < NUM_BUCKETS; ++i) {
+    for (int i = 0; i < NUM_BUCKETS; ++i)
+    {
         chunkHashmap.buckets[i] = NULL;
     }
 
     return chunkHashmap;
 }
 
-void chunkhashmap_clear(ChunkHashmap *chunkHashmap) {
-    for (int i = 0; i < NUM_BUCKETS; ++i) {
+void chunkhashmap_clear(ChunkHashmap *chunkHashmap)
+{
+    for (int i = 0; i < NUM_BUCKETS; ++i)
+    {
         struct ChunkHashmapNode *current = chunkHashmap->buckets[i];
-        while (current) {
+        while (current)
+        {
             chunk_destroy(&current->chunk);
             struct ChunkHashmapNode *next = current->next;
             current->next = NULL;
@@ -46,22 +53,26 @@ void chunkhashmap_clear(ChunkHashmap *chunkHashmap) {
     }
 }
 
-Chunk *chunkhashmap_get(ChunkHashmap *chunkHashmap, WorldPos key) {
+Chunk *chunkhashmap_get(ChunkHashmap *chunkHashmap, WorldPos key)
+{
     struct ChunkHashmapNode *node = chunkHashmap->buckets[hash_world_pos(key)];
 
-    while (node) {
-        if (world_pos_compare(key, node->key)) return &node->chunk;
+    while (node)
+    {
+        if (world_pos_compare(key, node->key))
+            return &node->chunk;
         node = node->next;
     }
 
     return NULL;
 }
 
-Chunk *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk) {
+Chunk *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk)
+{
     unsigned int chunkNodeIndex = hash_world_pos(key);
     struct ChunkHashmapNode *node = chunkHashmap->buckets[chunkNodeIndex];
 
-    struct ChunkHashmapNode *newOne = (struct ChunkHashmapNode *)malloc(sizeof(struct ChunkHashmapNode));\
+    struct ChunkHashmapNode *newOne = (struct ChunkHashmapNode *)malloc(sizeof(struct ChunkHashmapNode));
     newOne->chunk = chunk;
     newOne->key = key;
     newOne->next = node;
@@ -70,16 +81,20 @@ Chunk *chunkhashmap_set(ChunkHashmap *chunkHashmap, WorldPos key, Chunk chunk) {
     return &newOne->chunk;
 };
 
-void chunkhashmap_delete(ChunkHashmap *chunkHashmap, WorldPos key) {
+void chunkhashmap_delete(ChunkHashmap *chunkHashmap, WorldPos key)
+{
     struct ChunkHashmapNode *node = chunkHashmap->buckets[hash_world_pos(key)];
-    
-    while (node) {
+
+    while (node)
+    {
         struct ChunkHashmapNode *parent = node;
         node = node->next;
 
-        if (!node) return;
+        if (!node)
+            return;
 
-        if (world_pos_compare(key, node->key)) {
+        if (world_pos_compare(key, node->key))
+        {
             parent->next = node->next;
             chunk_destroy(&node->chunk);
             free(node);

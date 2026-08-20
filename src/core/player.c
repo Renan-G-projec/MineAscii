@@ -65,7 +65,7 @@ static void destroyHighlightCube(void)
     initializedHighlightCube = false;
 }
 
-Player player_create(KeyboardCtx *keyboardContext)
+Player player_create(KeyboardCtx *keyboardContext, World *world)
 {
     Player player;
 
@@ -77,15 +77,19 @@ Player player_create(KeyboardCtx *keyboardContext)
     player.orientation[0] = 0;
     player.orientation[1] = 0;
     player.orientation[2] = -1;
+    player.worldContext = world;
 
+    
     player.position[0] = 0;
     player.position[1] = 0;
     player.position[2] = 0;
-
+    
     player.velocity[0] = 0;
     player.velocity[1] = 0;
     player.velocity[2] = 0;
-
+    
+    player.chunk = world_get_chunk_coords(player.worldContext, player.position);
+    
     player.keyboardContext = keyboardContext;
 
     player.height = 2.0f;
@@ -119,10 +123,9 @@ void player_update(Player *player)
     player_raycast(player);
     player_update_orientation(player);
     player_update_camera(player);
+    player_update_chunk(player);
 }
 
-// Todo: Refactor this
-// This function is handling complex input logic
 void player_update_input(Player *player) {
     player->input.forward = keyboardctx_isKeyPressed(player->keyboardContext, 'W');
     player->input.backward = keyboardctx_isKeyPressed(player->keyboardContext, 'S');
@@ -282,7 +285,17 @@ inline void player_jump(Player *player)
 inline void player_set_position(Player *player, vec3 newPosition)
 {
     glm_vec3_copy(newPosition, player->position);
+    player->chunk = world_get_chunk_coords(player->worldContext, player->position);
     player_update_camera(player);
+}
+
+void player_update_chunk(Player *player) {
+    WorldPos currentChunk = world_get_chunk_coords(player->worldContext, player->position);
+
+    if (!world_pos_compare(currentChunk, player->chunk)) {
+        player->chunk = currentChunk;
+        world_load_new_chunks(player->worldContext, player->chunk);
+    }
 }
 
 void player_raycast(Player *player)

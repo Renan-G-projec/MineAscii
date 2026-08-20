@@ -23,6 +23,7 @@ typedef struct {
     Camera camera;
     RaycastResult lookingAt;
     
+    WorldPos chunk;
     vec3 position;
     vec3 orientation;
 
@@ -48,7 +49,7 @@ typedef struct {
 
 
 // Creates the player at default position {0, 0, 0}
-Player player_create(KeyboardCtx *keyboardContext);
+Player player_create(KeyboardCtx *keyboardContext, World *worldContext);
 
 // Updates game Logic
 void player_update(Player *);
@@ -64,6 +65,7 @@ void player_update_position(Player *);
 void player_snap_to_world(Player *player);
 void player_update_camera(Player *);
 void player_update_on_ground(Player *);
+void player_update_chunk(Player *); // Checks if the position was changed with a global variable. If yes asks the world to render the new ones
 void player_jump(Player *);
 
 // Drawing functions

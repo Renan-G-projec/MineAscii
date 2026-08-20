@@ -57,7 +57,7 @@ void world_load_new_chunks(World *world, WorldPos position) {
             int index = (x + WORLD_RENDER_DISTANCE) * 2 * WORLD_RENDER_DISTANCE + (z + WORLD_RENDER_DISTANCE);
             Chunk *chunk = world->loadedChunks[index];
             if (!chunk) continue;
-            if (!chunk_shall_be_rendered(world->loadedChunksPosition, chunk->worldPos, WORLD_RENDER_DISTANCE)) {
+            if (!chunk_shall_be_rendered(position, chunk->worldPos, WORLD_RENDER_DISTANCE)) {
                 chunkhashmap_delete(&world->chunkMap, chunk->worldPos);
             };
         }
@@ -65,11 +65,13 @@ void world_load_new_chunks(World *world, WorldPos position) {
 
     for (int x = -WORLD_RENDER_DISTANCE; x < WORLD_RENDER_DISTANCE; ++x) {
         for (int z = -WORLD_RENDER_DISTANCE; z < WORLD_RENDER_DISTANCE; ++z) {
-            Chunk *currentChunk = chunkhashmap_get(&world->chunkMap, (WorldPos){x * CHUNK_WIDTH, 0, z * CHUNK_DEPTH});
+            WorldPos loadingChunkPosition = (WorldPos){x + position.x, 0,  z + position.z};
+
+            Chunk *currentChunk = chunkhashmap_get(&world->chunkMap, loadingChunkPosition);
             if (!currentChunk) {
                 Chunk chunk = chunk_create();
-                chunk_set_world_pos(&chunk, (WorldPos){x, 0, z});
-                currentChunk = chunkhashmap_set(&world->chunkMap, chunk_get_world_pos(&chunk), chunk);
+                currentChunk = chunkhashmap_set(&world->chunkMap, loadingChunkPosition, chunk);
+                chunk_set_world_pos(currentChunk, loadingChunkPosition);
                 chunk_generate(currentChunk, world->seed);
                 chunk_build_mesh(currentChunk);
             }
@@ -132,4 +134,8 @@ void world_set_block_i(World *world, Block block, ivec3 coords) {
     
     chunk_set_block(chunk, block, localCoords);
     chunk_build_mesh(chunk);
+}
+
+inline WorldPos world_get_chunk_coords(World *world, vec3 position) {
+    return (WorldPos){floor_div(position[0], CHUNK_WIDTH), floor_div(position[1], CHUNK_HEIGHT), floor_div(position[2], CHUNK_DEPTH)};
 }

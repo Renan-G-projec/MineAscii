@@ -27,6 +27,8 @@ typedef struct {
     int16_t z;
 } WorldPos;
 
+bool world_pos_compare(WorldPos a, WorldPos b);
+
 typedef struct {
     Block *blocks;
     Mesh mesh;

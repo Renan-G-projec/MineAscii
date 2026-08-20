@@ -6,7 +6,7 @@
 #include "core/chunk.h"
 #include "util/worldChunkHashmap.h"
 
-#define WORLD_RENDER_DISTANCE 4
+#define WORLD_RENDER_DISTANCE 1
 
 typedef struct {
     Chunk *loadedChunks[WORLD_RENDER_DISTANCE * 4 * WORLD_RENDER_DISTANCE];
@@ -35,5 +35,8 @@ Block world_get_block_i(World *, ivec3 coordinates);
 
 void world_set_block(World *, Block block, vec3 coordinates);
 void world_set_block_i(World *, Block block, ivec3 coordinates);
+
+// Returns the chunk coordinates by the position;
+WorldPos world_get_chunk_coords(World *, vec3 globalCoordinates);
 
 #endif

@@ -15,15 +15,15 @@ int8_t engine_init(Engine *engine) {
     engine->keyboardContext = keyboardctx_create();
     keyboardctx_bindwindowctx(&engine->keyboardContext, engine->window);
 
-    engine->player = player_create(&engine->keyboardContext);
-    player_set_position(&engine->player, (vec3){5.0f, CHUNK_HEIGHT, 1.f});
-
+    
     glActiveTexture(0);
     engine->globalAtlas = texture_create();
     texture_load_png(engine->globalAtlas, "assets/textures/atlas.png");
+    
+    engine->player = player_create(&engine->keyboardContext, &engine->world);
+    player_set_position(&engine->player, (vec3){5.0f, CHUNK_HEIGHT, 1.f});
 
     engine->world = world_create(193384);
-    engine->player.worldContext = &engine->world;
 
     glEnable(GL_DEPTH_TEST);
     return 0;

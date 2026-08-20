@@ -181,7 +181,7 @@ void chunk_generate(Chunk* chunk, int seed) {
     chunk_fill_block(chunk, 0);
     
     // Generating the heightmap here because in the blockfill loop it would cause a lot of cache misses.
-    uint16_t heightMap[CHUNK_WIDTH * CHUNK_DEPTH];
+    static uint16_t heightMap[CHUNK_WIDTH * CHUNK_DEPTH];
     for (int x = 0; x < CHUNK_WIDTH; ++x) {
         for (int z = 0; z < CHUNK_DEPTH; ++z) {
             float raw = pnoise2d((chunk->worldPos.x * CHUNK_WIDTH + x) * 0.01, (chunk->worldPos.z * CHUNK_DEPTH + z) * 0.01, 4, 1, seed);

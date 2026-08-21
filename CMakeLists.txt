@@ -41,6 +41,7 @@ target_sources(MineAscii PRIVATE
     src/core/player.c
     src/core/world.c
     src/core/raycast.c
+    src/core/hitbox.c
 
     # Util for the core
     src/util/worldChunkHashmap.c

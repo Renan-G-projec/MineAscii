@@ -191,7 +191,7 @@ void player_update_velocity(Player *player)
         direction[1] += (player->lookingAt.face == TOP ? 1 : (player->lookingAt.face == BOTTOM ? -1 : 0));
         direction[2] += (player->lookingAt.face == BACK ? 1 : (player->lookingAt.face == FRONT ? -1 : 0));
 
-        world_set_block_i(player->worldContext, BLOCK_GRASS, direction);
+        world_set_block_i(player->worldContext, BLOCK_STONE, direction);
     }
 
     if (!player->onGround) {

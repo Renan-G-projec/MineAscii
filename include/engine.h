@@ -16,6 +16,8 @@
 #include "graphics/shader.h"
 #include "graphics/mesh.h"
 
+#define SKY_COLOR (113/255.0f), (185/255.0f), (255/255.0f), (1.0f)
+
 typedef struct {
     GLFWwindow *window;
     KeyboardCtx keyboardContext;

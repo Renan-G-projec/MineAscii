@@ -35,7 +35,7 @@ static void engine_update(Engine *engine) {
 
 static void engine_render(Engine *engine) {
     glfwPollEvents();
-    glClearColor(.1f, .2f, .4f, 1.0f);
+    glClearColor(SKY_COLOR);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     world_draw(&engine->world);

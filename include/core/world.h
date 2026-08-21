@@ -6,7 +6,7 @@
 #include "core/chunk.h"
 #include "util/worldChunkHashmap.h"
 
-#define WORLD_RENDER_DISTANCE 1
+#define WORLD_RENDER_DISTANCE 4
 
 typedef struct {
     Chunk *loadedChunks[WORLD_RENDER_DISTANCE * 4 * WORLD_RENDER_DISTANCE];

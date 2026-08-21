@@ -10,6 +10,7 @@
 #include "core/chunk.h"
 #include "core/player.h"
 #include "core/world.h"
+#include "graphics/asciibuffer.h"
 #include "graphics/texture.h"
 #include "graphics/camera.h"
 #include "graphics/input.h"
@@ -21,6 +22,7 @@
 typedef struct {
     GLFWwindow *window;
     KeyboardCtx keyboardContext;
+    struct asciibuffer screen;
 
     Texture globalAtlas;
     World world;

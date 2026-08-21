@@ -15,6 +15,7 @@ int8_t engine_init(Engine *engine) {
     engine->keyboardContext = keyboardctx_create();
     keyboardctx_bindwindowctx(&engine->keyboardContext, engine->window);
 
+    asciibuffer_init(&engine->screen, WINDOW_MODE_WIDTH, WINDOW_MODE_HEIGHT);
     
     glActiveTexture(0);
     engine->globalAtlas = texture_create();
@@ -59,6 +60,7 @@ void engine_start_gameloop(Engine *engine) {
 void engine_destroy(Engine *engine) {
     world_destroy(&engine->world);
     player_destroy(&engine->player);
+    asciibuffer_destroy(&engine->screen);
     glfwDestroyWindow(engine->window);
     glfwTerminate();
 }

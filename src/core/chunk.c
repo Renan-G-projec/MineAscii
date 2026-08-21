@@ -1,6 +1,8 @@
 // Ad Maiorem Dei Gloriam!
 #include "core/chunk.h"
 
+#define NOISE_OFFSET (double)81231477263.00
+
 // Helper function
 // Pushes to the array and changes the icon
 static void add_vertex(GLfloat *vertices, int *index, GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v) {
@@ -182,7 +184,7 @@ void chunk_generate(Chunk* chunk, int seed) {
     static uint16_t heightMap[CHUNK_WIDTH * CHUNK_DEPTH];
     for (int x = 0; x < CHUNK_WIDTH; ++x) {
         for (int z = 0; z < CHUNK_DEPTH; ++z) {
-            float raw = pnoise2d((chunk->worldPos.x * CHUNK_WIDTH + x) * 0.01, (chunk->worldPos.z * CHUNK_DEPTH + z) * 0.01, 4, 1, seed);
+            float raw = pnoise2d((chunk->worldPos.x * CHUNK_WIDTH + x + NOISE_OFFSET) * 0.01, (chunk->worldPos.z * CHUNK_DEPTH + z + NOISE_OFFSET) * 0.01, 0.4, 1, seed);
             heightMap[x * CHUNK_DEPTH + z] = CHUNK_BASE + (raw * (CHUNK_HEIGHT - CHUNK_BASE));
         }
     }

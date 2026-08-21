@@ -74,11 +74,13 @@ Player player_create(KeyboardCtx *keyboardContext, World *world)
 
     player.lookingAt.hit = 0;
 
+    player.hitbox = hitbox_create((vec3){-0.5f, 0.0f, -0.5f}, (vec3){1.0f, 2.0f, 1.0f});
+    hitbox_set_origin(&player.hitbox, (vec3){0.5f, 0.0f, 0.5f});
+    
     player.orientation[0] = 0;
     player.orientation[1] = 0;
     player.orientation[2] = -1;
     player.worldContext = world;
-
     
     player.position[0] = 0;
     player.position[1] = 0;
@@ -87,7 +89,7 @@ Player player_create(KeyboardCtx *keyboardContext, World *world)
     player.velocity[0] = 0;
     player.velocity[1] = 0;
     player.velocity[2] = 0;
-    
+
     player.chunk = world_get_chunk_coords(player.worldContext, player.position);
     
     player.keyboardContext = keyboardContext;
@@ -192,26 +194,26 @@ void player_update_velocity(Player *player)
         world_set_block_i(player->worldContext, BLOCK_GRASS, direction);
     }
 
-    if (!player->onGround)
-    {
+    if (!player->onGround) {
         player->velocity[1] -= GRAVITY_DEFAULT;
-    }
-    else
-    {
-        player->velocity[1] = 0;
     }
 }
 
-inline void player_update_position(Player *player)
-{
+inline void player_update_position(Player *player) {
     glm_vec3_add(player->position, player->velocity, player->position);
+    hitbox_move(&player->hitbox, player->velocity);
 }
 
 void player_snap_to_world(Player *player)
 {
-    // To implemen
-    if (player->onGround && player->velocity[1] < 0)
-        player->position[1] = (int)(player->position[1]) + 1;
+    // X collision
+    if (world_get_block(player->worldContext, (vec3){player->position[0] + player->velocity[0], player->position[1], player->position[2]})) player->velocity[0] = 0;
+    
+    // Y collision
+    if (world_get_block(player->worldContext, (vec3){player->position[0], player->position[1] + player->velocity[1], player->position[2]})) player->velocity[1] = 0;
+    
+    // Z collision
+    if (world_get_block(player->worldContext, (vec3){player->position[0], player->position[1], player->position[2] + player->velocity[2]})) player->velocity[2] = 0;
 }
 
 void player_update_orientation(Player *player)
@@ -282,10 +284,11 @@ inline void player_jump(Player *player)
     player->onGround = false;
 }
 
-inline void player_set_position(Player *player, vec3 newPosition)
+void player_set_position(Player *player, vec3 newPosition)
 {
     glm_vec3_copy(newPosition, player->position);
     player->chunk = world_get_chunk_coords(player->worldContext, player->position);
+    hitbox_set_position(&player->hitbox, newPosition);
     player_update_camera(player);
 }
 

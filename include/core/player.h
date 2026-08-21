@@ -4,10 +4,11 @@
 
 #include <glad/glad.h>
 #include "core/world.h"
-#include "configs.h"
 #include "core/raycast.h"
+#include "core/hitbox.h"
 #include "graphics/input.h"
 #include "graphics/camera.h"
+#include "configs.h"
 
 typedef struct {
     bool forward;
@@ -24,10 +25,10 @@ typedef struct {
     RaycastResult lookingAt;
     
     WorldPos chunk;
+    Hitbox hitbox;
+    
     vec3 position;
     vec3 orientation;
-
-    // Speed settings
     vec3 velocity;
 
     // Context settings

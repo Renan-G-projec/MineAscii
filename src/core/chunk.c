@@ -98,8 +98,8 @@ Chunk chunk_create(void) {
 }
 
 void chunk_build_mesh(Chunk *chunk) {
-    GLfloat *vertices = malloc(sizeof(GLfloat) * 120 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
-    GLuint *indices = malloc(sizeof(GLuint) * 36 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH);
+    static GLfloat vertices[sizeof(GLfloat) * 120 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH];
+    static GLuint indices[sizeof(GLuint) * 36 * CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_DEPTH];
 
     unsigned int currentVertexIndex = 0;
     unsigned int currentIndiceIndex = 0;
@@ -121,8 +121,6 @@ void chunk_build_mesh(Chunk *chunk) {
     }
 
     mesh_update(&chunk->mesh, vertices, indices, currentVertexIndex, currentIndiceIndex);
-    free(vertices);
-    free(indices);
 }
 
 void chunk_draw(Chunk *chunk, GLuint modelUniformLocation) {
